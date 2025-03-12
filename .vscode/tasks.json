@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev Theme",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/k",
+        "for /f \"tokens=1,2\" %i in ('read-config.bat') do shopify theme dev -s %i -t %j"
+      ],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "develop",
+        "close": false,
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pull Theme",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/k",
+        "for /f \"tokens=1,2\" %i in ('read-config.bat') do shopify theme pull -s %i -t %j"
+      ],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "develop",
+        "close": false,
+        "focus": true
+      }
+    },
+    {
+      "label": "Start Gulp",
+      "type": "shell",
+      "command": "gulp",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "develop",
+        "close": false
+      }
+    },
+    {
+      "label": "Start Development",
+      "dependsOn": [
+        "Pull Theme",
+        "Start Gulp"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

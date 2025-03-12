@@ -1,0 +1,366 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "breadcrumb_6EDVUW": {
+          "type": "breadcrumb",
+          "settings": {}
+        },
+        "subheading_xrdFp4": {
+          "type": "subheading",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "details_Pxeyem": {
+          "type": "details",
+          "settings": {}
+        },
+        "benefits_W96Tme": {
+          "type": "benefits",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity_selector": true,
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
+          }
+        },
+        "related_JhLc4N": {
+          "type": "related",
+          "settings": {
+            "block_heading": "Se complète avec",
+            "product_list_limit": 8
+          }
+        },
+        "informations_slider_RfUw7e": {
+          "type": "informations_slider",
+          "settings": {
+            "icon_1": "cadenas",
+            "heading_1": "Paiement sécurisé",
+            "content_1": "<p>Visa, Mastercard, etc<\/p>",
+            "icon_2": "fabrication-artisanale-francaise",
+            "heading_2": "Fabrication artisanale française",
+            "content_2": "<p><strong>Lorem Ipsum <\/strong>is simply dummy text of the printing and typesetting industry.<\/p>",
+            "icon_3": "",
+            "heading_3": "<strong>Lorem Ipsum<\/strong>",
+            "content_3": "<p><strong>Lorem Ipsum <\/strong>is simply dummy text of the printing and typesetting industry.<\/p>"
+          }
+        },
+        "products_slider_UWrXb7": {
+          "type": "products_slider",
+          "settings": {
+            "heading": "Retrouvez ce produit dans",
+            "products": "{{ product.metafields.data.packs_associated.value }}",
+            "show_details": true
+          }
+        }
+      },
+      "block_order": [
+        "breadcrumb_6EDVUW",
+        "subheading_xrdFp4",
+        "title",
+        "price",
+        "details_Pxeyem",
+        "benefits_W96Tme",
+        "description",
+        "variant_picker",
+        "buy_buttons",
+        "related_JhLc4N",
+        "informations_slider_RfUw7e",
+        "products_slider_UWrXb7"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "media_position": "left",
+        "image_zoom": "none",
+        "mobile_thumbnails": "show",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    },
+    "section_pack_content_dFmNJk": {
+      "type": "section-pack-content",
+      "settings": {
+        "title": "Les produits de votre pack",
+        "description": "<p>Retrouvez le détail des produits composant ce pack afin d'avoir un aperçu de chacune des vertus de ceux-ci.<\/p>",
+        "show_rating": true,
+        "color_scheme": "scheme-5",
+        "card_promo_color_scheme": "scheme-3",
+        "full_width": false,
+        "padding_top": 64,
+        "padding_bottom": 36
+      }
+    },
+    "section_care_protocol_rHBfar": {
+      "type": "section-care-protocol",
+      "blocks": {
+        "text_BbpFWM": {
+          "type": "text",
+          "repeater": "{{ product.metafields.pack[\"care-protocol\"].value.steps.value }}",
+          "settings": {
+            "text": "{{ block.repeater.content | metafield_tag }}"
+          }
+        }
+      },
+      "block_order": [
+        "text_BbpFWM"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/utilisation_pipette.webp",
+        "title": "Protocole de soin",
+        "text": "<p>Découvrez notre <strong>protocole de soin dermo-cosmétique<\/strong>, conçu pour optimiser l’efficacité des produits de votre pack. Chaque étape est pensée pour préparer, traiter et protéger votre peau en fonction de ses besoins spécifiques. Suivez nos recommandations d’application pour maximiser les bienfaits et révéler tout l’éclat de votre peau.<\/p>",
+        "color_scheme": "scheme-5",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "icon_text_grid_UbK3GD": {
+      "type": "icon-text-grid",
+      "blocks": {
+        "icon_text_DJV8h7": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "huile-essentielle",
+            "text": "Oleo-extraction 100% d'actifs"
+          }
+        },
+        "icon_text_TreB44": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "formule-vegan",
+            "text": "Formule vegan"
+          }
+        },
+        "icon_text_GDeJHW": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "100-dorigine-naturelle",
+            "text": "Actifs 100% naturels"
+          }
+        },
+        "icon_text_TVbM73": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "fabrication-artisanale-francaise",
+            "text": "Fabrication artisanale française"
+          }
+        },
+        "icon_text_Rbfpw6": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "elaboree-par-des-docteures-en-pharmacie",
+            "text": "Elaborée par des docteures en pharmacie"
+          }
+        },
+        "icon_text_M3dxf8": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "certifie-bio-cosmos-organic",
+            "text": "Certifié BIO Cosmos Organic"
+          }
+        }
+      },
+      "block_order": [
+        "icon_text_DJV8h7",
+        "icon_text_TreB44",
+        "icon_text_GDeJHW",
+        "icon_text_TVbM73",
+        "icon_text_Rbfpw6",
+        "icon_text_M3dxf8"
+      ],
+      "settings": {
+        "content_alignment": "center",
+        "color_scheme": "scheme-4",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "featured_reviews_CiVaHF": {
+      "type": "featured-reviews",
+      "settings": {
+        "featured_reviews": "{{ product.metafields.data.featured_reviews.value }}",
+        "color_scheme": "scheme-5",
+        "full_width": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "product_benefits_Dya7Pw": {
+      "type": "product-benefits",
+      "settings": {
+        "heading": "{{ product.metafields[\"section-benefits\"].heading.value }}",
+        "benefits": "{{ product.metafields[\"section-benefits\"].benefits.value }}",
+        "image": "{{ product.metafields[\"section-benefits\"].image.value }}",
+        "tagline": "<p>{{ product.metafields[\"section-benefits\"].tagline.value }}<\/p>",
+        "color_scheme": "scheme-4",
+        "full_width": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "accordions_with_image_bApMeQ": {
+      "type": "accordions-with-image",
+      "blocks": {
+        "accordion_ytL93k": {
+          "type": "accordion",
+          "settings": {
+            "title": "Composition",
+            "content": "{{ product.metafields[\"section-informations\"].composition_content | metafield_tag }}",
+            "image": "{{ product.metafields[\"section-informations\"].composition_image.value }}"
+          }
+        },
+        "accordion_6nt6im": {
+          "type": "accordion",
+          "settings": {
+            "title": "Utilisation",
+            "content": "{{ product.metafields[\"section-informations\"].usage_content | metafield_tag }}<p><strong>Conservation :<\/strong><\/p><p>{{ product.metafields.data.conservation | metafield_tag }}<\/p><p><strong>Précautions d'emploi :<\/strong><\/p><p>{{ product.metafields.data.precautions_emploi | metafield_tag }}<\/p><p><\/p><p>{{ product.metafields.data.information_huile | metafield_tag }}<\/p>",
+            "image": "{{ product.metafields[\"section-informations\"].usage_image.value }}"
+          }
+        },
+        "accordion_tCQCmN": {
+          "type": "accordion",
+          "settings": {
+            "title": "Ingrédients",
+            "content": "{{ product.metafields[\"section-informations\"].ingredients_content | metafield_tag }}",
+            "image": "{{ product.metafields[\"section-informations\"].ingredients_image.value }}"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_ytL93k",
+        "accordion_6nt6im",
+        "accordion_tCQCmN"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "Vous aimerez peut-être",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "section_custom_advices_fdEAkK": {
+      "type": "section-custom-advices",
+      "blocks": {
+        "advices_card_aYKmXj": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/card.jpg",
+            "card_heading": "Diagnostic de peau",
+            "card_text": "<p>Découvrez la sélection des soins les plus adaptés à vos besoins en répondant à quelques questions sur votre peau.<\/p>",
+            "card_link": "",
+            "icon": "diagnostic",
+            "enable_gorgias": false
+          }
+        },
+        "advices_card_gBrdnf": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/425cd268602f743584eb554914939893.png",
+            "card_heading": "Contactez-nous",
+            "card_text": "<p>Vous avez une question ou un besoin plus spécifique ? Contactez nos docteurs en pharmacie pour obtenir une réponse personnalisée.<\/p>",
+            "card_link": "",
+            "icon": "message",
+            "enable_gorgias": true
+          }
+        },
+        "advices_card_YA4aEF": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/e67739aac4d767e72d93357a0bf74de0.png",
+            "card_heading": "Questions de peau",
+            "card_text": "<p>Découvrez tous nos conseils pour votre peau dans nos articles \"questions de peau\".<\/p>",
+            "card_link": "",
+            "icon": "",
+            "enable_gorgias": false
+          }
+        }
+      },
+      "block_order": [
+        "advices_card_aYKmXj",
+        "advices_card_gBrdnf",
+        "advices_card_YA4aEF"
+      ],
+      "settings": {
+        "section_heading": "Mes conseils personnalisés",
+        "color_scheme": "scheme-4",
+        "full_width": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "173998332897757b8d": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_CGgxwY": {
+          "type": "shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_CGgxwY"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "section_pack_content_dFmNJk",
+    "section_care_protocol_rHBfar",
+    "icon_text_grid_UbK3GD",
+    "featured_reviews_CiVaHF",
+    "product_benefits_Dya7Pw",
+    "accordions_with_image_bApMeQ",
+    "related-products",
+    "section_custom_advices_fdEAkK",
+    "173998332897757b8d"
+  ]
+}

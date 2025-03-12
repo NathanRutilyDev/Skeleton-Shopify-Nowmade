@@ -1,0 +1,162 @@
+.diagnostic-featured-articles__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow: hidden;
+  gap: 3.2rem;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .diagnostic-featured-articles__container {
+    gap: 4rem;
+  }
+}
+.diagnostic-featured-articles h2 {
+  margin-block: 0;
+}
+.diagnostic-featured-articles__carousel {
+  width: 100%;
+  padding-bottom: 4rem;
+  overflow: visible;
+}
+.diagnostic-featured-articles__slide {
+  max-width: 100%;
+  height: auto;
+  margin-right: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  border-radius: 0.4rem;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .diagnostic-featured-articles__slide {
+    max-width: calc(33.33% - 23.3333333333px);
+    margin-right: 16px;
+  }
+}
+.diagnostic-featured-articles__slide .card__inner {
+  --ratio-percent: 62.5% !important;
+}
+.diagnostic-featured-articles__slide .card__inner img {
+  border-radius: 0.4rem 0.4rem 0 0;
+}
+.diagnostic-featured-articles__slide .card__inner .card__media {
+  border-radius: 0;
+}
+.diagnostic-featured-articles__slide .card:not(.ratio) {
+  gap: 0;
+}
+.diagnostic-featured-articles__slide .card__content {
+  width: auto;
+  padding: 24px 16px;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .diagnostic-featured-articles__slide .card__content {
+    padding: 24px;
+  }
+}
+.diagnostic-featured-articles__slide .card__heading.h5 {
+  margin-bottom: 1.6rem;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 24px;
+}
+.diagnostic-featured-articles__slide .article-card__excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+.diagnostic-featured-articles__slide .article-card__excerpt p:first-child {
+  margin-top: 0;
+}
+.diagnostic-featured-articles__slide .article-card__excerpt p:last-child {
+  margin-bottom: 0;
+}
+.diagnostic-featured-articles__slide .card__footer {
+  display: none;
+}
+.diagnostic-featured-articles__navigation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  z-index: 1;
+  bottom: -16px;
+  left: 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+  pointer-events: none;
+  gap: 8px;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .diagnostic-featured-articles__navigation {
+    top: -6.4rem;
+    right: 0;
+    left: initial;
+    padding: 0 -1rem;
+  }
+}
+.diagnostic-featured-articles .swiper-button-prev,
+.diagnostic-featured-articles .swiper-button-next {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 2.4em;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  min-height: 2.4rem;
+  margin: 0;
+  padding: 0;
+  -webkit-transform: none;
+      -ms-transform: none;
+          transform: none;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  inset: 0;
+}
+.diagnostic-featured-articles .swiper-button-prev:hover,
+.diagnostic-featured-articles .swiper-button-next:hover {
+  -webkit-transform: translateY(-50%) scale(1.1);
+      -ms-transform: translateY(-50%) scale(1.1);
+          transform: translateY(-50%) scale(1.1);
+  background: rgba(var(--color-foreground), 0.06);
+}
+.diagnostic-featured-articles .swiper-button-prev svg,
+.diagnostic-featured-articles .swiper-button-next svg {
+  width: 2.4em;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  min-height: 2.4rem;
+}
+.diagnostic-featured-articles .swiper-pagination {
+  position: relative;
+  inset: 0;
+}

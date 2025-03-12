@@ -1,0 +1,59 @@
+{% if products %}
+  <swiper-slider class="swiper product-products-slider">
+    <script type="application/json">
+      {
+        "allowTouchMove": true,
+        "slidesPerView": "auto",
+        "grabCursor": true,
+        "pagination": {
+          "el": ".swiper-pagination",
+          "type": "fraction"
+        },
+        "navigation": {
+          "nextEl": ".swiper-button-next",
+          "prevEl": ".swiper-button-prev"
+        },
+        "mousewheel": {
+          "forceToAxis": true,
+          "releaseOnEdges": true
+        },
+        "keyboard": {
+          "enabled": true
+        }
+      }
+    </script>
+    <div class="product-products-slider__header">
+      <div class="h4">{{ heading }}</div>
+      <div class="product-products-slider__actions">
+        <div class="swiper-button-prev">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+      </div>
+    </div>
+    <div
+      class="swiper-wrapper"
+    >
+      {%- for card_product in products -%}
+        <div class="swiper-slide">
+          {% render 'card-product-horizontal',
+            card_product: card_product,
+            media_aspect_ratio: 'square',
+            image_shape: false,
+            show_secondary_image: false,
+            show_vendor: false,
+            show_rating: true,
+            lazy_load: lazy_load,
+            skip_styles: false,
+            quick_add: 'standard',
+            section_id: section.id,
+            allow_details: allow_details
+          %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </swiper-slider>
+{% endif %}

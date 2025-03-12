@@ -1,0 +1,140 @@
+{
+  "sections": {
+    "main-collection-header": {
+      "type": "main-collection-header",
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_title": true,
+        "show_description": true,
+        "show_image_desktop": true,
+        "image_desktop": "shopify:\/\/shop_images\/a0fa687478a5662bff5c876060e5a590.jpg",
+        "min_height_desktop": "250",
+        "content_position": "left",
+        "caption_width_desktop": 50,
+        "show_image_mobile": true,
+        "image_mobile": "shopify:\/\/shop_images\/a0fa687478a5662bff5c876060e5a590.jpg",
+        "min_height_mobile": "150",
+        "content_position_mobile": "top_left",
+        "section_width": "full",
+        "section_margin_top": 0,
+        "section_margin_bottom": 0,
+        "colors": "white",
+        "caption_bg_color": "#fbeee0",
+        "image_overlay_color": "#ffffff",
+        "image_overlay_opacity": 0
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "blocks": {
+        "promo_e8JryC": {
+          "type": "promo",
+          "settings": {
+            "color_scheme": "scheme-3",
+            "image": "shopify:\/\/shop_images\/a0fa687478a5662bff5c876060e5a590.jpg",
+            "heading": "Créez votre pack et obtenez 10% de réduction",
+            "content": "<p>Des soins à l'efficacité, réunis au sein d'un pack avec un prix préférentiel.<\/p>",
+            "cta_label": "PACKS DE SOINS",
+            "cta_link": "shopify:\/\/collections\/packs-de-soin",
+            "promo_text": "Réduction",
+            "promo_heading": "-10%"
+          }
+        },
+        "article_9mw4nb": {
+          "type": "article",
+          "settings": {
+            "article": "blog-oleassence\/comment-connaitre-son-type-de-peau",
+            "image": "shopify:\/\/shop_images\/card_4cb47e2f-47dd-4c4a-8903-f396e7e08cac.jpg"
+          }
+        },
+        "review_4k7fz3": {
+          "type": "review",
+          "settings": {
+            "section_color_scheme": "",
+            "heading": "Produit incomparable",
+            "review": "<p>Le sérum numéro 2 a transformé ma peau couperosée. Je l’applique tous les soirs depuis 1 mois et les résultats ont été visibles dès les premières applications. Ma peau s’est éclaircie. Je mets beaucoup moins de fond de teint et mon visage est unifié et lumineux, rien à voir avec avant. Je ne peux plus m’en passer, c’est le meilleur produit jamais essayé. Merci !<\/p>",
+            "author": "Virginie",
+            "date": "France, 21 Octobre 2024"
+          }
+        }
+      },
+      "block_order": [
+        "promo_e8JryC",
+        "article_9mw4nb",
+        "review_4k7fz3"
+      ],
+      "settings": {
+        "products_per_page": 12,
+        "columns_desktop": 4,
+        "color_scheme": "",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "enable_filtering": true,
+        "filter_type": "vertical",
+        "enable_sorting": true,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "section_custom_advices_fdEAkK": {
+      "type": "section-custom-advices",
+      "blocks": {
+        "advices_card_aYKmXj": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/card.jpg",
+            "card_heading": "Diagnostic de peau",
+            "card_text": "<p>Découvrez la sélection des soins les plus adaptés à vos besoins en répondant à quelques questions sur votre peau.<\/p>",
+            "card_link": "",
+            "icon": "diagnostic",
+            "enable_gorgias": false
+          }
+        },
+        "advices_card_gBrdnf": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/425cd268602f743584eb554914939893.png",
+            "card_heading": "Contactez-nous",
+            "card_text": "<p>Vous avez une question ou un besoin plus spécifique ? Contactez nos docteurs en pharmacie pour obtenir une réponse personnalisée.<\/p>",
+            "card_link": "",
+            "icon": "message",
+            "enable_gorgias": true
+          }
+        },
+        "advices_card_YA4aEF": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/e67739aac4d767e72d93357a0bf74de0.png",
+            "card_heading": "Questions de peau",
+            "card_text": "<p>Découvrez tous nos conseils pour votre peau dans nos articles \"questions de peau\".<\/p>",
+            "card_link": "",
+            "icon": "",
+            "enable_gorgias": false
+          }
+        }
+      },
+      "block_order": [
+        "advices_card_aYKmXj",
+        "advices_card_gBrdnf",
+        "advices_card_YA4aEF"
+      ],
+      "settings": {
+        "section_heading": "Mes conseils personnalisés",
+        "color_scheme": "scheme-4",
+        "full_width": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main-collection-header",
+    "product-grid",
+    "section_custom_advices_fdEAkK"
+  ]
+}

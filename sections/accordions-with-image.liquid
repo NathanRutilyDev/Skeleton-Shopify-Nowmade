@@ -1,0 +1,185 @@
+{{ 'section-accordions-with-image.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<accordion-group class="accordions-with-image isolate{% unless section.settings.full_width %} page-width{% endunless %}">
+  <div class="accordions-with-image__container color-{{ section.settings.color_scheme }} gradient{% if section.settings.full_width %} accordions-with-image--full-width content-container--full-width{% endif %} section-{{ section.id }}-padding">
+    <div class="accordions-with-image__wrapper{% if section.settings.full_width %} page-width{% endif %}">
+      <div class="accordions-with-image__grid">
+        <div class="accordions-with-image__accordions">
+          {% for block in section.blocks %}
+            {% if block.type == 'accordion' %}
+              <details
+                id="Accordion-{{ block.id }}"
+                class="accordions-with-image__details"
+                {{ block.shopify_attributes }}
+                {% if forloop.first %}
+                  open
+                {% endif %}
+              >
+                <summary class="accordions-with-image__summary">
+                  <h3 class="accordions-with-image__title h2">{{ block.settings.title }}</h3>
+                  <span class="svg-wrapper">
+                    {{- 'icon-plus.svg' | inline_asset_content -}}
+                  </span>
+                  <span class="svg-wrapper">
+                    {{- 'icon-minus.svg' | inline_asset_content -}}
+                  </span>
+                </summary>
+                <div class="accordions-with-image__content rte">
+                  {{ block.settings.content }}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="accordions-with-image__images">
+          {% for block in section.blocks %}
+            {% if block.type == 'accordion' and block.settings.image != blank %}
+              <div
+                class="accordions-with-image__image{% if forloop.first %} is-active{% endif %}"
+                data-accordion="Accordion-{{ block.id }}"
+              >
+                {% render 'responsive-image',
+                  image: block.settings.image,
+                  loading: 'lazy',
+                  allow_stretch: true,
+                  sizes: '(min-width: 768px) 1000px, 100vw'
+                %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</accordion-group>
+
+<script>
+  class AccordionGroup extends HTMLElement {
+    constructor() {
+      super();
+      this.details = Array.from(this.querySelectorAll('details'));
+      this.images = Array.from(this.querySelectorAll('.accordions-with-image__image'));
+      this.bindEvents();
+    }
+
+    bindEvents() {
+      this.details.forEach((detail) => {
+        detail.addEventListener('toggle', () => {
+          if (detail.open) {
+            // Close other details
+            this.details.forEach((otherDetail) => {
+              if (otherDetail !== detail && otherDetail.open) {
+                otherDetail.open = false;
+              }
+            });
+
+            // Update images
+            this.images.forEach((image) => {
+              if (image.dataset.accordion === detail.id) {
+                image.classList.add('is-active');
+              } else {
+                image.classList.remove('is-active');
+              }
+            });
+          }
+        });
+      });
+    }
+  }
+
+  customElements.define('accordion-group', AccordionGroup);
+</script>
+
+{% schema %}
+{
+  "name": "Accordéons avec image",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Schéma de couleurs",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "Pleine largeur"
+    },
+    {
+      "type": "header",
+      "content": "Espacement"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espace supérieur",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espace inférieur",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordéon",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Titre"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordéons avec image",
+      "blocks": [
+        {
+          "type": "accordion"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

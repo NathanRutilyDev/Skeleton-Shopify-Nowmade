@@ -1,0 +1,59 @@
+{{ 'component-featured-promo.css' | asset_url | stylesheet_tag }}
+
+<div class="card__featured-promo color-{{ color_scheme }} {{ custom_class }}">
+  <div class="card__featured-promo--image">
+    {% if metaobject.image.value != blank %}
+      {% render 'responsive-image',
+        image: metaobject.image.value,
+        sizes: '420px',
+        loading: 'lazy',
+        allow_stretch: true
+      %}
+    {% else %}
+      <div class="responsive-image-wrapper">
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {% endif %}
+
+    {% if metaobject.macaron_subheading != blank or metaobject.macaron_heading != blank %}
+      <div class="card__featured-promo--macaron-content">
+        {{ 'icon-macaron.svg' | inline_asset_content }}
+        {%- assign icon = metaboject.macaron_icon -%}
+        {%- liquid
+          if icon.svg_code != blank
+            echo icon.svg_code
+          elsif icon.icon != blank
+            echo icon.icon | image_url: width: 40 | image_tag: alt: icon.name, width: icon.icon.width, height: icon.icon.height, loading: 'lazy'
+          endif
+        -%}
+        <div class="card__featured-promo--macaron-texts">
+          {% if metaobject.macaron_subheading != blank %}
+            <div class="card__featured-promo--macaron-text">{{ metaobject.macaron_subheading }}</div>
+          {% endif %}
+          {% if metaobject.macaron_heading != blank %}
+            <p class="card__featured-promo--macaron-heading">{{ metaobject.macaron_heading }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="card__featured-promo--content">
+    {% if metaobject.header != blank %}
+      <div class="card__featured-promo--title h2">{{ metaobject.header }}</div>
+    {% endif %}
+    {% if metaobject.description != blank %}
+      <div class="card__featured-promo--text text-body">{{ metaobject.description | metafield_tag }}</div>
+    {% endif %}
+    {% if metaobject.cta_text != blank %}
+      <a
+        href="{{ metaobject.cta_link }}"
+        class="card__featured-promo--cta button button--primary button--full-width font-body-bold"
+        {% if metaobject.cta_link == blank %}
+          disabled
+        {% endif %}
+      >
+        {{- metaobject.cta_text -}}
+      </a>
+    {% endif %}
+  </div>
+</div>

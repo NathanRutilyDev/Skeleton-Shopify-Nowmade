@@ -1,0 +1,37 @@
+{% if block.settings.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+
+{%- if block.settings.video_url != blank or block.settings.video != blank -%}
+  <video-lazy class="article-block__video video-container">
+    <template>
+      {% if block.settings.video_url != blank %}
+        {% assign video_id = block.settings.video_url | split: '/' | last %}
+        <div id="player-{{ video_id }}" class="youtube-player"></div>
+      {% elsif block.settings.video != blank %}
+        {{ block.settings.video | video_tag: controls: true, preload: 'auto' }}
+      {% endif %}
+    </template>
+
+    <div class="video-overlay">
+      {%- liquid
+        if block.settings.preview_image != blank
+          echo block.settings.preview_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.preview_image.alt, width: block.settings.preview_image.width, height: block.settings.preview_image.height
+        elsif block.settings.video != blank
+          echo block.settings.video.preview_image.src | image_url: width: 600 | image_tag: loading: 'lazy', width: block.settings.video.preview_image.width, height: block.settings.video.preview_image.height
+        else
+          echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+        endif
+      -%}
+
+      <button class="play-button" aria-label="Lire la vidéo">
+        {{ 'icon-play.svg' | inline_asset_content }}
+      </button>
+    </div>
+  </video-lazy>
+{%- endif -%}

@@ -1,0 +1,209 @@
+{% comment %}
+  Renders a article card
+
+  Accepts:
+  - blog: {Object} Blog object
+  - card_article: {Object} Article Liquid object (optional)
+  - media_aspect_ratio: {String} Size of the article image card. Values are "square" and "portrait". Default is "square" (optional)
+  - show_image: {String} The setting either show the article image or not. If it's not included it will show the image by default
+  - image_shape: {String} Image mask to apply to the article image card. Values are "arch", "blob", "chevronleft", "chevronright", "diamond", "parallelogram", and "round". (optional)
+  - show_date: {String} The setting either show the article date or not. If it's not included it will not show the image by default
+  - show_author: {String} The setting either show the article author or not. If it's not included it will not show the author by default
+  - show_badge: {String} The setting either show the blog badge or not.
+  - extend_height: {Boolean} Card height extends to available container space. Default: true (optional)
+  - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - skip_styles: {Boolean} Don't include component styles. Useful when rendering multiple article cards in a loop. Default: false (optional)
+  - section_id: {String} The ID of the section that contains this card.
+  - horizontal_class: {Boolean} Add a card--horizontal class if set to true. Default: false (optional)
+  - placeholder_image: {String} The placeholder image to use when no article exists. Default: 'product-apparel-2' (optional)
+  - featured: {Boolean} Adds a card--featured class if set to true. Default: false (optional)
+  - overlayed: {Boolean} Adds a card--overlayed class if set to true. Default: false (optional)
+
+  Usage:
+  {% render 'card-article', show_date: section.settings.show_date %}
+{% endcomment %}
+
+{%- if card_article and card_article != empty -%}
+  {%- liquid
+    assign ratio = 1
+    if card_article.image and media_aspect_ratio == 'portrait'
+      assign ratio = 0.75
+    elsif card_article.image and media_aspect_ratio == 'adapt'
+      assign ratio = card_article.image.aspect_ratio
+    endif
+    if ratio == 0 or ratio == null
+      assign ratio = 1
+    endif
+    if featured
+      assign sizes_division = 2
+      assign sizes_division_mobile = 1
+    elsif overlayed
+      assign sizes_division = 2
+      assign sizes_division_mobile = 1
+    else
+      assign sizes_division = 4
+      assign sizes_division_mobile = 2
+    endif
+    assign show_reading_time = show_reading_time | default: true
+  -%}
+  <div class="card-wrapper article-card-wrapper{% if featured %} featured{% endif %}{% if overlayed %} overlayed{% endif %}">
+    <div
+      class="
+        card card--{{ settings.card_style }}
+        {% if card_article.image %} card--media{% else %} card--text{% endif %}
+        {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
+        {% if image_shape and image_shape != 'default' %} card--shape{% endif %}
+        {% if extend_height %} card--extend-height{% endif %}
+        {% if card_article.image == nil and settings.card_style == 'card' %} ratio{% endif %}
+        {% if horizontal_class %} card--horizontal{% endif %}
+      "
+      style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+    >
+      <div
+        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_article.image or settings.card_style == 'standard' %} ratio{% endif %}"
+        style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+      >
+        {%- if card_article.image -%}
+          <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
+            <a
+              href="{{ card_article.url }}"
+              id="CardLink-{{ section_id }}-{{ card_article.id }}"
+              class="full-unstyled-link"
+              aria-labelledby="CardLink-{{ section_id }}-{{ card_article.id }} Badge-{{ section_id }}-{{ card_article.id }}"
+            >
+              <div class="media media--transparent media--hover-effect">
+                <img
+                  srcset="
+                    {%- if card_article.image.width >= 165 -%}{{ card_article.image | image_url: width: 165 }} 165w,{%- endif -%}
+                    {%- if card_article.image.width >= 360 -%}{{ card_article.image | image_url: width: 360 }} 360w,{%- endif -%}
+                    {%- if card_article.image.width >= 533 -%}{{ card_article.image | image_url: width: 533 }} 533w,{%- endif -%}
+                    {%- if card_article.image.width >= 720 -%}{{ card_article.image | image_url: width: 720 }} 720w,{%- endif -%}
+                    {%- if card_article.image.width >= 940 -%}{{ card_article.image | image_url: width: 940 }} 940w,{%- endif -%}
+                    {%- if card_article.image.width >= 1066 -%}{{ card_article.image | image_url: width: 1066 }} 1066w,{%- endif -%}
+                    {{ card_article.image | image_url }} {{ card_article.image.width }}w
+                  "
+                  src="{{ card_article.image | image_url: width: 980 }}"
+                  sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | divided_by: 1.5 }}px, (min-width: 990px) calc((100vw - 130px) / {{ sizes_division }}), (min-width: 750px) calc((100vw - 120px) / {{ sizes_division }}), calc((100vw - 35px) / {{ sizes_division_mobile }})"
+                  alt="{{ card_article.image.alt | escape }}"
+                  class="motion-reduce"
+                  {% unless lazy_load == false %}
+                    loading="lazy"
+                  {% endunless %}
+                  width="{{ card_article.image.width }}"
+                  height="{{ card_article.image.height }}"
+                >
+              </div>
+            </a>
+          </div>
+        {%- endif -%}
+        {%- if show_badge -%}
+          <div class="card__badge {{ settings.badge_position }}">
+            <span class="badge color-{{ settings.color_schemes | first }}">{{ 'blogs.article.blog' | t }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="card__content{% if overlayed %}-overlay{% endif %}">
+        {% unless show_tags == false %}
+          {% assign tags = card_article.metafields.data.tags.value %}
+          {% if tags != blank %}
+            <swiper-slider class="article-card__tags-container swiper">
+              <script type="application/json">
+                {
+                  "slidesPerView": "auto",
+                  "slidesOffsetAfter": 24,
+                  "grabCursor": true,
+                  "allowTouchMove": true,
+                  "watchOverflow": true,
+                  "mousewheel": {
+                    "forceToAxis": true,
+                    "releaseOnEdges": true
+                  },
+                  "keyboard": {
+                    "enabled": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
+                  }
+                }
+              </script>
+              <div class="swiper-button-prev">
+                {{ 'icon-chevron-left.svg' | inline_asset_content }}
+              </div>
+              <div class="article-card__tags swiper-wrapper">
+                {% for tag in tags limit: 3 %}
+                  {%- liquid
+                    assign text_contrast = tag.background_color.value | color_brightness
+
+                    if text_contrast < 50
+                      assign tag_color = '#ffffff'
+                    else
+                      assign tag_color = 'rgb(var(--color-foreground))'
+                    endif
+                  -%}
+
+                  <span
+                    class="swiper-slide uppercase"
+                  >
+                    <span
+                      class="article-card__tag"
+                      style="background-color: {{ tag.background_color }}; color: {{ tag_color }}"
+                    >
+                      {{- tag.name -}}
+                    </span>
+                  </span>
+                {% endfor %}
+              </div>
+              <div class="swiper-button-next">
+                {{ 'icon-chevron-left.svg' | inline_asset_content }}
+              </div>
+            </swiper-slider>
+          {% endif %}
+        {% endunless %}
+
+        <div class="card__informations">
+          <h3
+            class="card__heading{% if featured == true %} h3 {% elsif card_article.image or settings.card_style == 'standard' %} h5{% endif %}"
+            {% if card_article.image or settings.card_style == 'card' %}
+              id="title-{{ section_id }}-{{ card_article.id }}"
+            {% endif %}
+          >
+            <a
+              href="{{ card_article.url }}"
+              id="CardLink-{{ section_id }}-{{ card_article.id }}"
+              class="full-unstyled-link"
+              aria-labelledby="CardLink-{{ section_id }}-{{ card_article.id }} Badge-{{ section_id }}-{{ card_article.id }}"
+            >
+              {{ card_article.title | escape }}
+            </a>
+          </h3>
+          {% if show_excerpt %}
+            <div class="article-card__excerpt">
+              {{ card_article.excerpt }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="card__footer">
+          {% if show_reading_time and card_article.content != blank and featured != true %}
+            <span class="article-card__content_read_time text-xs">
+              {%- liquid
+                assign content_words = card_article.content | split: ' '
+                assign content_words_size = content_words.size
+                assign content_read_time = content_words_size | divided_by: 150 | round
+                echo 'blogs.article.reading_time' | t: time: content_read_time
+              -%}
+            </span>
+          {% elsif featured == true %}
+            <a href="{{ card_article.url }}" class="read-more uppercase">
+              {{ 'blogs.article.see_article' | t }}
+              <div class="article-card__arrow-container">
+                {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+              </div>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

@@ -1,0 +1,126 @@
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-blog-most-read.css' | asset_url | stylesheet_tag }}
+{{ 'template-blog.css' | asset_url | stylesheet_tag }}
+
+<div class="color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+  <div class="page-width">
+    <h2 class="h1 center">{{ section.settings.section_heading }}</h2>
+    <div class="most-read__grid">
+      <div class="most-read__grid--secondary-articles">
+        <div class="article-card">
+          {% render 'card-article', card_article: section.settings.first_secondary_article %}
+        </div>
+        <div class="article-card">
+          {% render 'card-article', card_article: section.settings.second_secondary_article %}
+        </div>
+      </div>
+      {% assign card_promo = metaobjects.card_promo.values | where: 'enabled', true %}
+      {% if card_promo.size > 0 %}
+        <div class="most-read__grid--special-cards">
+          {% render 'card-promo',
+            metaobject: card_promo[0],
+            color_scheme: section.settings.card_promo_color_scheme,
+            custom_class: 'card__featured-promo-blog'
+          %}
+        </div>
+      {% endif %}
+      <!-- Article principal -->
+      <div class="most-read__grid--featured-article article-card">
+        {% render 'card-article',
+          card_article: section.settings.featured_article,
+          overlayed: true,
+          show_excerpt: true
+        %}
+      </div>
+
+      <div class="most-read__grid--tertiary-articles">
+        {% if section.settings.third_secondary_article != blank %}
+          <div class="article-card">
+            {% render 'card-article', card_article: section.settings.third_secondary_article %}
+          </div>
+        {% endif %}
+        {% if section.settings.fourth_secondary_article != blank %}
+          <div class="article-card">
+            {% render 'card-article', card_article: section.settings.fourth_secondary_article %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Les plus lus",
+  "class": "most-read",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.section_title"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_heading",
+      "label": "t:all.Heading",
+      "default": "Les plus lus"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-blog.settings.featured.label"
+    },
+    {
+      "type": "article",
+      "id": "featured_article",
+      "label": "Article en vedette"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-blog.settings.secondary.label"
+    },
+    {
+      "type": "article",
+      "id": "first_secondary_article",
+      "label": "Premier article"
+    },
+    {
+      "type": "article",
+      "id": "second_secondary_article",
+      "label": "Second article"
+    },
+    {
+      "type": "article",
+      "id": "third_secondary_article",
+      "label": "Troisième article"
+    },
+    {
+      "type": "article",
+      "id": "fourth_secondary_article",
+      "label": "Quatrième article"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Carte promo"
+    },
+    {
+      "type": "paragraph",
+      "content": "La carte promo est relié à la 1ère entrée active trouvée sur le metaobject 'card_promo'."
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_promo_color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["blog"]
+  }
+}
+{% endschema %}

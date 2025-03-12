@@ -1,0 +1,143 @@
+{
+  "sections": {
+    "main_diagnostic_result_hero_banner_zUhjAP": {
+      "type": "main-diagnostic-result-hero-banner",
+      "settings": {
+        "titre_du_diagnostic": "Votre type de peau est {{ metaobject.label.value }}",
+        "label_du_resultat": "{{ metaobject.label.value }}",
+        "preoccupations": "<p>D’après vos réponses, vos préoccupations sont : <\/p>",
+        "description": "{{ metaobject.section_hero_banner_description | metafield_tag }}",
+        "zone": "{{ metaobject.zone | metafield_text: field: 'nom' }}",
+        "type": "{{ metaobject.type | metafield_text: field: 'nom' }}",
+        "besoin": "{{ metaobject.besoin | metafield_text: field: 'nom' }}",
+        "image_arriere_plan": "shopify:\/\/shop_images\/hero.jpg",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "section_diagnostic_descriptive_blocs_M6cL3B": {
+      "type": "section-diagnostic-descriptive-blocs",
+      "settings": {
+        "heading": "Tout connaître : {{ metaobject.label.value }}",
+        "subheading": "{{ metaobject.section_blocs_descriptifs_subheading.value }}",
+        "description": "{{ metaobject.section_blocs_descriptifs_description | metafield_tag }}",
+        "image": "shopify:\/\/shop_images\/9c0fe5edd2686a295ac56a2650c9ae34.jpg",
+        "color_scheme": "scheme-2fd0985f-4905-42c2-b3fc-0e90776ac004",
+        "full_width": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "main_diagnostic_ordonnance_m7eHL7": {
+      "type": "main-diagnostic-ordonnance",
+      "settings": {
+        "phase_1": "{{ metaobject.products_phase_1.value }}",
+        "phase_2": "{{ metaobject.products_phase_2.value }}",
+        "phase_3": "{{ metaobject.products_phase_3.value }}",
+        "main_image": "shopify:\/\/shop_images\/offre-anti-age-fete-des-mamies-carre-copy.jpg",
+        "present_image": "{{ metaobject.section_ordonnance_cadeau.value.image.value }}",
+        "icon_metaobject": "{{ metaobject.section_ordonnance_cadeau.value.icon.value }}",
+        "present_text": "{{ metaobject.section_ordonnance_cadeau.value.text | metafield_tag }}",
+        "chat_image": "shopify:\/\/shop_images\/image.png",
+        "chat_title": "Chat avec Christine !",
+        "chat_text": "<p>Nous sommes en ligne de 9h à 17h du lundi au vendredi.<\/p>",
+        "show_rating": false,
+        "quick_add": "standard",
+        "section_color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 100
+      }
+    },
+    "featured_reviews_6EEQh6": {
+      "type": "featured-reviews",
+      "settings": {
+        "featured_reviews": "{{ metaobject.section_reviews_featured.value }}",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 0
+      }
+    },
+    "section_diagnostic_featured_articles_aj3b4M": {
+      "type": "section-diagnostic-featured-articles",
+      "settings": {
+        "heading": "Conseils de nos experts",
+        "color_scheme": "scheme-2fd0985f-4905-42c2-b3fc-0e90776ac004",
+        "full_width": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "icon_text_grid_phYed3": {
+      "type": "icon-text-grid",
+      "blocks": {
+        "icon_text_VRCHJ7": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "huile-essentielle",
+            "text": "Oleo-extraction 100% d'actifs"
+          }
+        },
+        "icon_text_rE6K3f": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "formule-vegan",
+            "text": "Formule vegan"
+          }
+        },
+        "icon_text_Jgj7NV": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "100-dorigine-naturelle",
+            "text": "Actifs 100% naturels"
+          }
+        },
+        "icon_text_JBqWdq": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "fabrication-artisanale-francaise",
+            "text": "Fabrication artisanale française"
+          }
+        },
+        "icon_text_bGcAB8": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "elaboree-par-des-docteures-en-pharmacie",
+            "text": "Elaborée par des docteures en pharmacie"
+          }
+        },
+        "icon_text_ezGfYw": {
+          "type": "icon_text",
+          "settings": {
+            "icon": "certifie-bio-cosmos-organic",
+            "text": "Certifié BIO Cosmos Organic"
+          }
+        }
+      },
+      "block_order": [
+        "icon_text_VRCHJ7",
+        "icon_text_rE6K3f",
+        "icon_text_Jgj7NV",
+        "icon_text_JBqWdq",
+        "icon_text_bGcAB8",
+        "icon_text_ezGfYw"
+      ],
+      "settings": {
+        "content_alignment": "center",
+        "color_scheme": "",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main_diagnostic_result_hero_banner_zUhjAP",
+    "section_diagnostic_descriptive_blocs_M6cL3B",
+    "main_diagnostic_ordonnance_m7eHL7",
+    "featured_reviews_6EEQh6",
+    "section_diagnostic_featured_articles_aj3b4M",
+    "icon_text_grid_phYed3"
+  ]
+}

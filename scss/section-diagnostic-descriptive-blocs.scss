@@ -1,0 +1,138 @@
+.descriptive-blocs {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 1.5rem;
+
+    @include respond-to(md) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 4rem;
+    }
+  }
+
+  &__image {
+    display: none;
+
+    @include respond-to(md) {
+      display: block;
+      position: sticky;
+      top: 8rem;
+      flex: 0 0 50%;
+      max-width: 50%;
+      height: 100%;
+      padding: 6.4rem;
+
+      .responsive-image-wrapper {
+        img {
+          position: relative;
+          height: auto;
+          max-height: 700px;
+          aspect-ratio: 592 / 700;
+          border-radius: 0.4rem;
+        }
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+
+    @include respond-to(md) {
+      padding: 6.4rem 6.4rem 6.4rem 0;
+    }
+  }
+
+  &__heading {
+    margin-bottom: 4rem;
+    color: rgb(var(--color-foreground));
+  }
+
+  &__subheading {
+    margin-bottom: 1.6rem;
+  }
+
+  &__description {
+    margin-bottom: 4rem;
+  }
+
+  &__blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @include respond-to(sm) {
+      gap: 2rem;
+    }
+  }
+
+  &__block {
+    padding-block: 2.4rem;
+    border-bottom: 1px solid rgb(var(--color-foreground));
+
+    &:first-child {
+      border-top: 1px solid rgb(var(--color-foreground));
+    }
+  }
+
+  &__block-header {
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    div {
+      position: relative;
+      padding-right: 2rem;
+    }
+
+    .icon-plus,
+    .icon-minus {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transition:
+        rotate var(--duration-short) ease,
+        visibility var(--duration-short) ease,
+        opacity var(--duration-short) ease;
+      translate: 0 -50%;
+      rotate: 0;
+    }
+  }
+
+  &__block:not([open]) {
+    .icon-minus {
+      visibility: hidden;
+      opacity: 0;
+      rotate: 180deg;
+    }
+  }
+
+  &__block[open] {
+    .icon-plus {
+      visibility: hidden;
+      opacity: 0;
+      rotate: 180deg;
+    }
+
+    .descriptive-blocs__block-description {
+      padding-top: 1.6rem;
+    }
+  }
+
+  &__block-title {
+    margin: 0;
+    color: rgb(var(--color-foreground));
+  }
+
+  &__block-description {
+    color: rgb(var(--color-foreground));
+
+    p:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}

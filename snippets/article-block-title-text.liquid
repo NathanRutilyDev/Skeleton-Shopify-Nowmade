@@ -1,0 +1,10 @@
+<div class="article-block__title-text">
+  {% if block.settings.heading != blank %}
+    <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  {% if block.settings.text != blank %}
+    <div class="article-block__title-text--content">
+      {{ block.settings.text }}
+    </div>
+  {% endif %}
+</div>

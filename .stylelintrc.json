@@ -1,0 +1,6 @@
+{
+  "extends": "stylelint-config-property-sort-order-smacss",
+  "plugins": ["stylelint-order"],
+  "rules": {
+  }
+}

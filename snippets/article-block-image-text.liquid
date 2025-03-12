@@ -1,0 +1,44 @@
+<div class="article-block__image-text">
+  {% if block.settings.heading != blank %}
+    <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  {% if block.settings.text != blank %}
+    <div class="article-block__title-text--content rte">
+      {{ block.settings.text }}
+    </div>
+  {% endif %}
+  {% if block.settings.image != blank
+    or block.settings.content_heading != blank
+    or block.settings.content_text != blank
+  %}
+    <div class="article-block__image-text--item">
+      {% if block.settings.image != blank %}
+        <div class="article-block__image-text--media">
+          {% if block.settings.image_url != blank %}
+            <a href="{{ block.settings.image_url }}" target="_blank">
+          {% endif %}
+          {%- render 'responsive-image',
+            image: block.settings.image,
+            adaptive_ratio: block.settings.image_ratio,
+            sizes: '(min-width: 1200px) 400px, (min-width: 768px) 700px, calc(100vw - 32px)',
+            class: 'article-block__image-text--image'
+          -%}
+          {% if block.settings.image_url != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.content_heading != blank or block.settings.content_text != blank %}
+        <div class="article-block__image-text--content">
+          {% if block.settings.content_heading != blank %}
+            <h2 class="article-block__image-text--title">{{ block.settings.content_heading }}</h2>
+          {% endif %}
+          <div class="article-block__image-text--text rte">
+            {{ block.settings.content_text }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

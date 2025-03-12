@@ -1,0 +1,169 @@
+{{ 'section-custom-advices.css' | asset_url | stylesheet_tag }}
+
+<div class="isolate color-{{ section.settings.color_scheme }} gradient {% unless section.settings.full_width %} page-width{% endunless %}">
+  <div class="section-{{ section.id }}-padding">
+    <h2>{{ section.settings.section_heading }}</h2>
+    <div class="custom-advices__cards-container">
+      {%- for block in section.blocks -%}
+        <a
+          {% if block.settings.enable_gorgias %}
+            href="#"
+            onclick="if(window.GorgiasChat){ window.GorgiasChat.open(); } return false;"
+          {% else %}
+            href="{{ block.settings.card_link }}"
+          {% endif %}
+          class="custom-advices__card full-unstyled-link"
+        >
+          <div class="custom-advices__card--image">
+            {% render 'responsive-image', image: block.settings.card_image, allow_stretch: true, sizes: '250px' %}
+          </div>
+          <div class="custom-advices__card--text">
+            <div class="custom-advices__card--header">
+              <h3>{{ block.settings.card_heading }}</h3>
+              <div class="text-body">{{ block.settings.card_text }}</div>
+            </div>
+            <div class="custom-advices__card--icons">
+              {% if block.settings.icon != blank %}
+                <div class="custom-advices__card--svg">
+                  {%- liquid
+                    assign icon_metaobject = block.settings.icon
+                    if icon_metaobject.svg_code != blank
+                      echo icon_metaobject.svg_code
+                    elsif icon_metaobject.icon.value != blank
+                      echo icon_metaobject.icon | image_url: width: 48 | image_tag: alt: icon_metaobject.name, width: icon_metaobject.icon.width, height: icon_metaobject.icon.height, loading: 'lazy'
+                    endif
+                  -%}
+                </div>
+              {% endif %}
+              <div class="custom-advices__card--arrow">
+                {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+              </div>
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Mes conseils personalisés",
+  "class": "custom-advices",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:all.section_title"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_heading",
+      "label": "t:all.Heading",
+      "default": "Mes conseils personnels"
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "t:sections.rich-text.settings.full_width.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "advices_card",
+      "name": "Carte de conseils",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Image de la carte"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "card_heading",
+          "label": "Titre de la carte"
+        },
+        {
+          "type": "richtext",
+          "id": "card_text",
+          "label": "Texte de la carte"
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "t:all.Button_link"
+        },
+        {
+          "type": "metaobject",
+          "id": "icon",
+          "label": "Icône",
+          "metaobject_type": "icon"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_gorgias",
+          "default": false,
+          "label": "t:all.enable_gorgias"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mes conseils personalisés",
+      "settings": {
+        "section_heading": "Mes conseils personalisés"
+      },
+      "blocks": [
+        {
+          "type": "advices_card"
+        },
+        {
+          "type": "advices_card"
+        },
+        {
+          "type": "advices_card"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"]
+  }
+}
+{% endschema %}

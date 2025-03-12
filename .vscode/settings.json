@@ -1,0 +1,29 @@
+{
+  "[css]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[liquid]": {
+    "editor.defaultFormatter": "Shopify.theme-check-vscode",
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "editor.formatOnSave": false,
+  "scss.validate": false,
+  "stylelint.validate": [
+    "css",
+    "scss"
+  ]
+}

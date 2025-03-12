@@ -1,0 +1,49 @@
+<div class="mega-menu__item">
+  <a
+    href="{{ link.url }}"
+    class="mega-menu__header mega-menu__link h5 {% if link.active %}mega-menu__link-active{% endif %}"
+  >
+    {% if link %}
+      {% assign icon_title = link.title | handle %}
+      {% assign icon_entry = metaobjects.icon[icon_title] %}
+      {% if icon_entry != blank %}
+        <div class="mega-menu-products__icon">
+          {{
+            icon_entry.icon
+            | image_url: width: 28
+            | image_tag:
+              loading: 'lazy',
+              alt: icon_entry.icon.title,
+              width: icon_entry.icon.width,
+              height: icon_entry.icon.height
+          }}
+        </div>
+      {% endif %}
+      <span>
+        {{- link.title -}}
+      </span>
+    {% endif %}
+  </a>
+
+  <ul class="mega-menu__list">
+    {% for childlink in link.links limit: 10 %}
+      <li>
+        <a href="{{ link.url }}" class="mega-menu__link {% if childlink.active %}mega-menu__link-active{% endif %}">
+          {{- childlink.title -}}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% if link.links.size > 10 %}
+  <ul class="mega-menu__list">
+    {% for childlink in link.links offset: 10 %}
+      <li>
+        <a href="{{ link.url }}" class="mega-menu__link {% if childlink.active %}mega-menu__link-active{% endif %}">
+          {{- childlink.title -}}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

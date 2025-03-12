@@ -1,0 +1,172 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_breadcrumbs": true,
+            "blog_show_date": false,
+            "blog_show_author": false
+          }
+        },
+        "excerpt_6eFjaX": {
+          "type": "excerpt",
+          "settings": {}
+        },
+        "tags_KjhUYQ": {
+          "type": "tags",
+          "settings": {}
+        },
+        "reading_time_jArytm": {
+          "type": "reading-time",
+          "settings": {
+            "read_text": "TEMPS DE LECTURE:",
+            "publish_text": "MIS À JOUR LE"
+          }
+        },
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "chat_7MVmtT": {
+          "type": "chat",
+          "settings": {
+            "image_chat": "shopify:\/\/shop_images\/image_5d8f796c-7ac2-4274-811a-75c60c3445d1.jpg",
+            "chat_heading": "Chat avec Christine !",
+            "chat_content": "<p>Bénéficiez de précieux conseils d'experts pour faire les meilleurs choix pour votre commande.<\/p>",
+            "first_badge_heading": "",
+            "first_badge_content": "",
+            "second_badge_heading": "",
+            "second_badge_content": ""
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "excerpt_6eFjaX",
+        "tags_KjhUYQ",
+        "reading_time_jArytm",
+        "featured_image",
+        "chat_7MVmtT",
+        "content"
+      ],
+      "settings": {
+        "show_comments": false,
+        "image_height": "small",
+        "show_breadcrumbs": true,
+        "show_search": true,
+        "tag_limit": 1,
+        "show_reading_time": true,
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "card_promo_color_scheme": "scheme-3"
+      }
+    },
+    "advices": {
+      "type": "section-custom-advices",
+      "blocks": {
+        "advices_card_h3xG7t": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/card_4cb47e2f-47dd-4c4a-8903-f396e7e08cac.jpg",
+            "card_heading": "Diagnostic de peau",
+            "card_text": "<p>Découvrez la sélection des soins les plus adaptés à vos besoins en répondant à quelques questions sur votre peau.<\/p>",
+            "card_link": "",
+            "icon": "diagnostic",
+            "enable_gorgias": false
+          }
+        },
+        "advices_card_zyN88F": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/425cd268602f743584eb554914939893.png",
+            "card_heading": "Contactez-nous",
+            "card_text": "<p>Vous avez une question ou un besoin plus spécifique ? Contactez nos docteurs en pharmacie pour obtenir une réponse personnalisée.<\/p>",
+            "card_link": "",
+            "icon": "message",
+            "enable_gorgias": true
+          }
+        },
+        "advices_card_VYhhWL": {
+          "type": "advices_card",
+          "settings": {
+            "card_image": "shopify:\/\/shop_images\/e67739aac4d767e72d93357a0bf74de0.png",
+            "card_heading": "Questions de peau",
+            "card_text": "<p>Découvrez tous nos conseils pour votre peau dans nos articles \"questions de peau\".<\/p>",
+            "card_link": "shopify:\/\/blogs\/blog-oleassence",
+            "icon": "",
+            "enable_gorgias": false
+          }
+        }
+      },
+      "block_order": [
+        "advices_card_h3xG7t",
+        "advices_card_zyN88F",
+        "advices_card_VYhhWL"
+      ],
+      "settings": {
+        "section_heading": "Mes conseils personnalisés",
+        "color_scheme": "scheme-4",
+        "full_width": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_WndfVT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Notre histoire",
+            "heading_size": "h2"
+          }
+        },
+        "text_kJQBHf": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Oleassence, un laboratoire cosmétique créé en 2011 dans le Luberon par Christine Cuisiniez, une pharmacienne experte passionnée par le naturel.<\/p><p>Lorsque Christine découvrit les propriétés extraordinaires des huiles végétales elle commença à formuler des mélanges pour apporter des solutions aux problèmes de peau de ses enfants et de son entourage. Eczéma, psoriasis, rougeurs… tout le monde était bluffé par les incroyables résultats qu’apportaient ses sérums.<\/p><p>C’est ainsi qu’elle décida de se concentrer pleinement au développement de soins : sélectionner les formules les plus performantes pour chaque peau à problèmes, en se basant sur les propriétés exceptionnelles des huiles végétales.<\/p>",
+            "text_style": "text-body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_WndfVT",
+        "text_kJQBHf"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/e09e0022029cde0d63cb7903edf2a106.png",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "full_width": true,
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "advices",
+    "story"
+  ]
+}

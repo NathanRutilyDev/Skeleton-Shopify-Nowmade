@@ -1,0 +1,16 @@
+<script src="{{ 'predictive-articles.js' | asset_url }}" defer="defer"></script>
+{{ 'component-search-bar-article.css' | asset_url | stylesheet_tag }}
+
+<predictive-articles class="search-article color-scheme-1">
+  <div class="search-article__container">
+    <input
+      type="text"
+      name="q"
+      placeholder="Rechercher"
+      class="text-body"
+      autocomplete="off"
+    >
+    {{ 'icon-search.svg' | inline_asset_content }}
+  </div>
+  <div class="search-article__results"></div>
+</predictive-articles>

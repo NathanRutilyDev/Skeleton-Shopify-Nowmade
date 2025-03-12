@@ -1,0 +1,72 @@
+{% comment %}
+  Renders a megamenu for the header.
+
+  Usage:
+  {% render 'header-mega-menu' %}
+{% endcomment %}
+
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        {% liquid
+          assign block_megamenu = blank
+          assign has_megamenu = false
+          for block in section.blocks
+            if block.type == 'megamenu_products' or block.type == 'megamenu_standard' or block.type == 'megamenu_blog'
+              if block.settings.trigger == link.title
+                assign has_megamenu = true
+                assign block_megamenu = block
+              endif
+            endif
+          endfor
+        %}
+        {%- if has_megamenu == true -%}
+          <div class="mega-menu-wrapper">
+            <a
+              href="{{ link.url }}"
+              id="HeaderMenu-{{ link.handle }}"
+              class="
+                header__menu-item list-menu__item focus-inset
+                {%- if link.child_active %} header__active-menu-item{% endif -%}
+              "
+            >
+              <span>
+                {{- link.title | escape -}}
+              </span>
+            </a>
+            <div
+              id="MegaMenu-Content-{{ forloop.index }}"
+              class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+              tabindex="-1"
+            >
+              {%- liquid
+                case block_megamenu.type
+                  when 'megamenu_products'
+                    render 'header-megamenu-products', block: block_megamenu
+                  when 'megamenu_standard'
+                    render 'header-megamenu-standard', block: block_megamenu
+                  when 'megamenu_blog'
+                    render 'header-megamenu-blog', block: block_megamenu
+                endcase
+              -%}
+            </div>
+          </div>
+        {%- else -%}
+          <a
+            id="HeaderMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item focus-inset {%- if link.current %} header__active-menu-item{% endif %}"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span>
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>

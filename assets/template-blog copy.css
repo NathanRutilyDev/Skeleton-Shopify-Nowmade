@@ -1,0 +1,543 @@
+@charset "UTF-8";
+.simple-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 12px;
+  border: none;
+  background-color: #FFF;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.simple-button p {
+  color: var(--Main-Brown, #443D36);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: Raleway;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  margin: 0;
+}
+.simple-button .svg-wrapper {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+.simple-button .svg-wrapper > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, -webkit-transform 0.3s ease;
+}
+
+.simple-button[aria-expanded=false] .icon-plus {
+  -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+  opacity: 1;
+  visibility: visible;
+}
+
+.simple-button[aria-expanded=false] .icon-minus {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.simple-button[aria-expanded=true] .icon-plus {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.simple-button[aria-expanded=true] .icon-minus {
+  -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+  opacity: 1;
+  visibility: visible;
+}
+
+.filter-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  padding: 16px 64px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 40px;
+  border-bottom: 1px solid #D4CCC4;
+  background: var(--Main-White, #FFF);
+}
+
+.filter-panel {
+  display: none;
+}
+
+.filter-panel.active {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  padding: 16px 64px;
+  background: #f9f9f9;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colonnes égales */
+  gap: 32px; /* Espacement entre les éléments */
+}
+
+.blog-grid__featured-article {
+  display: grid;
+  grid-column: 1/3;
+  grid-row: 1/5;
+  grid-template-rows: 1fr;
+  gap: 24px;
+}
+
+/* Articles secondaires */
+.blog-grid__secondary-articles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes dans cette zone */
+  grid-template-rows: repeat(2, 1fr); /* 2 lignes */
+  grid-column: 3/5; /* Occupe les colonnes 3 et 4 */
+  grid-row: 1/3; /* Occupe les lignes 1 et 2 */
+  gap: 24px; /* Espacement interne entre les articles */
+}
+
+/* Cartes spécialisées */
+.blog-grid__special-cards {
+  display: grid;
+  grid-column: 3/5; /* Occupe les colonnes 3 et 4 */
+  grid-row: 3/5; /* Occupe les lignes 1 et 2 */
+  gap: 24px; /* Espacement interne entre les articles */
+}
+
+.special-card {
+  padding: 32px;
+  gap: 16px;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  background: var(--Main-Peach-dark, #FBEEE0);
+}
+.special-card .special-cards__infos {
+  width: 100%;
+}
+.special-card .special-cards__infos h5, .special-card .special-cards__infos h4, .special-card .special-cards__infos p {
+  margin: 0;
+}
+.special-card .special-card__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 16px;
+}
+.special-card .special-card__header .special-cards__portrait img {
+  border-radius: 999px;
+}
+.special-card .special-card__header .special-cards__infos {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 12px;
+}
+.special-card .special-card__vignettes-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  gap: 16px;
+}
+.special-card .special-card__vignette {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #FFF;
+  border-radius: 4px;
+  padding: 16px;
+  gap: 16px;
+}
+.special-card .special-card__vignette .special-card__svg-container {
+  padding: 8px;
+  background-color: #FBEEE0;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.special-card .special-card__vignette .special-card__arrow-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.special-card svg {
+  width: 32px;
+  height: 32px;
+}
+
+.special-card h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.special-card p {
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.promo-cards {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
+  border-radius: 4px;
+  background: #69543F;
+  overflow: hidden;
+}
+.promo-cards .promo-cards__image {
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(28.11%, #C8A77C), color-stop(50%, rgba(200, 167, 124, 0)));
+  background: linear-gradient(180deg, #C8A77C 28.11%, rgba(200, 167, 124, 0) 50%);
+}
+.promo-cards .promo-cards__image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.promo-cards .promo-cards__text {
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  padding: 32px;
+}
+.promo-cards .promo-cards__text h3 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px; /* 125% */
+  letter-spacing: 0.32px;
+  color: var(--Main-White, #FFF);
+  margin: 0px 0px 16px;
+}
+.promo-cards .promo-cards__text p {
+  color: var(--Main-White, #FFF);
+}
+.promo-cards .promo-cards__text button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 16px 24px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
+  background: var(--Main-Peach, #FFF6EB);
+  color: var(--Main-Brown, #443D36);
+  border-radius: 4px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.32px;
+  -webkit-transition: background 0.2s ease;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.load-more-button-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 40px 0px;
+  text-transform: uppercase;
+}
+
+.most-read-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.most-read-grid__featured-article {
+  display: grid;
+  grid-column: 3/5;
+  grid-row: 1/3;
+  grid-template-rows: 1fr;
+  gap: 24px;
+}
+
+/* Articles secondaires */
+.most-read-grid__secondary-articles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes dans cette zone */
+  grid-column: 1/3; /* Occupe les colonnes 3 et 4 */
+  gap: 24px; /* Espacement interne entre les articles */
+}
+
+/* Cartes spécialisées */
+.most-read-grid__special-cards {
+  display: grid;
+  grid-column: 1/3;
+  grid-row: 2/3;
+}
+
+.most-read {
+  background-color: #FBEEE0;
+  padding: 64px;
+}
+.most-read h1 {
+  text-align: center;
+}
+
+/* Par défaut, l'overlay mobile est masqué */
+filter-accordion .filter-accordion-mobile__overlay, .filter-accordion-mobile {
+  display: none;
+}
+
+/* Quand le custom element a la classe "open", on affiche l'overlay */
+filter-accordion.open .filter-accordion-mobile__overlay {
+  display: block;
+}
+
+@media screen and (max-width: 767px) {
+  .filter-row {
+    display: none;
+  }
+  .filter-accordion-mobile {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    /* Par défaut, seule la zone toggle est visible */
+  }
+  /* Bouton sticky visible par défaut */
+  .filter-accordion-mobile__toggle {
+    width: 100%;
+    padding: 16px;
+    background: var(--Main-White, #FFF);
+    border-top: 1px solid #D4CCC4;
+    border-left: 1px solid #D4CCC4;
+    border-right: 1px solid #D4CCC4;
+    font-family: Raleway;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  /* Overlay full-screen (initialement caché) */
+  .filter-accordion-mobile__overlay {
+    display: none;
+  }
+  /* Quand l'overlay est ouvert, on affiche tout */
+  .filter-accordion-mobile.open .filter-accordion-mobile__overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF;
+    z-index: 1100;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  /* En overlay, le header */
+  .filter-accordion-mobile__header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px solid #D4CCC4;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .filter-accordion-mobile__header h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  .filter-accordion-mobile__close {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  /* Les items de filtre en mode accordéon */
+  .filter-accordion-mobile__content .filter-item {
+    margin-bottom: 16px;
+  }
+  /* Par défaut, on masque les panels */
+  .filter-accordion-mobile__content .filter-panel {
+    display: none;
+    padding: 8px 0 0;
+  }
+  /* On affichera le panel si le bouton associé a aria-expanded="true" */
+  .filter-accordion-mobile__content .simple-button[aria-expanded=true] + .filter-panel {
+    display: block;
+  }
+  /* Globalement, on passe à une seule colonne pour le conteneur principal */
+  .main-blog {
+    padding: 16px; /* on peut réduire le padding si besoin */
+  }
+  /* Pour la section principale (blog-grid) */
+  .blog-grid {
+    display: block; /* on passe d'une grille à un empilement vertical */
+  }
+  /* Featured article prend toute la largeur */
+  .blog-grid__featured-article {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  /* Les articles secondaires : on les affiche en grille à 2 colonnes */
+  .blog-grid__secondary-articles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  /* On masque le promo-card de la section principale 
+     et on affiche uniquement la special-card.
+     Si votre container .blog-grid__special-cards contient les 2 cartes (special et promo),
+     vous pouvez masquer directement l'élément promo-cards à l'intérieur. */
+  .blog-grid__special-cards .promo-cards {
+    display: none;
+  }
+  /* Si la special-card est dans le même conteneur, on la force à occuper toute la largeur */
+  .blog-grid__special-cards .special-card {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  /* Le bouton "Voir plus d'articles" s'affiche en dessous en full width et centré */
+  .load-more-button-wrapper.mobile-load-more {
+    display: block;
+    margin-top: 24px;
+    width: 100%;
+    text-align: center;
+  }
+  .load-more-button-wrapper.desktop-load-more {
+    display: none;
+  }
+  /* ---------------------------
+     Section "Most Read"
+     --------------------------- */
+  .section-most-read-padding {
+    padding: 16px;
+  }
+  /* Le titre centré reste inchangé */
+  .most-read h1 {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  /* Pour le container Most-read, on passe en mode block */
+  .most-read-grid {
+    display: block;
+  }
+  /* Le featured article de la section "most-read" prend toute la largeur */
+  .most-read-grid__featured-article {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  /* Les articles secondaires de Most-read s'affichent en grille à 2 colonnes */
+  .most-read-grid__secondary-articles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  /* La promo-card de la section "most-read" est affichée, en full width */
+  .most-read-grid__special-cards .promo-cards {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    width: 100%;
+    margin-top: 24px;
+  }
+}

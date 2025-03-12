@@ -1,0 +1,12 @@
+.breadcrumb a {
+  margin-right: 8px;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+.breadcrumb .breadcrumb-divider {
+  margin-right: 8px;
+}
+.breadcrumb .breadcrumb-item:last-child,
+.breadcrumb .breadcrumb-divider:last-child {
+  margin-right: 0;
+}

@@ -1,0 +1,184 @@
+.card__featured-promo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .card__featured-promo {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+  .card__featured-promo > *:first-child {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 0%;
+            flex: 1 1 0%;
+  }
+  .card__featured-promo > *:last-child {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 1 56%;
+            flex: 0 1 56%;
+  }
+}
+.card__featured-promo--image {
+  position: relative;
+  padding: 16px;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .card__featured-promo--image {
+    display: grid;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+}
+.card__featured-promo .responsive-image-wrapper {
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
+.card__featured-promo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.card__featured-promo--macaron-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  z-index: 0;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 0px;
+          flex: 1 0 0;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  width: 130px;
+  height: 130px;
+  padding: 16px 16px 16px 22px;
+  color: rgb(var(--color-background-contrast));
+  text-align: center;
+  gap: 8px;
+}
+.card__featured-promo--macaron-content > * {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  margin-inline: auto;
+}
+.card__featured-promo--macaron-content svg.icon-macaron {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 130px;
+  height: 130px;
+}
+.card__featured-promo--macaron-content svg.icon-macaron path {
+  fill: rgb(var(--color-foreground));
+}
+.card__featured-promo--macaron-content svg.icon-tag path {
+  stroke: rgb(var(--color-background-contrast));
+}
+.card__featured-promo--macaron-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.28px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+.card__featured-promo--macaron-heading {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  line-height: 32px;
+}
+.card__featured-promo--content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 24px 16px;
+  background: rgb(var(--color-background));
+  text-wrap: balance;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .card__featured-promo--content {
+    padding: 32px;
+  }
+}
+.card__featured-promo--content p {
+  margin-top: 0;
+}
+.card__featured-promo--content p:not(:last-child) {
+  margin-bottom: 1.6rem;
+}
+.card__featured-promo--content p:last-child {
+  margin-bottom: 2.4rem;
+}
+.card__featured-promo--content .button {
+  overflow: hidden;
+  border-radius: 4px;
+  white-space: nowrap;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .card__featured-promo--content .button {
+    margin-top: auto;
+  }
+}
+.card__featured-promo--title {
+  margin-bottom: 8px;
+  /* Handle min-width only */
+  /* Handle min-width only */
+}
+@media (min-width: 768px) and (max-width: 1079px) {
+  .card__featured-promo--title {
+    font-size: 24px;
+    letter-spacing: 0.24px;
+    line-height: 32px;
+  }
+}
+@media (min-width: 1200px) {
+  .card__featured-promo--title {
+    margin-bottom: 16px;
+  }
+}

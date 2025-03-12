@@ -1,0 +1,184 @@
+{{ 'section-diagnostic-result-hero-banner.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign section_padding_top = section.settings.padding_top | times: 0.75 | round
+  assign section_padding_bottom = section.settings.padding_bottom | times: 0.75 | round
+  assign full_width = section.settings.full_width
+%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --section-padding-top: {{ section_padding_top }}px;
+    --section-padding-bottom: {{ section_padding_bottom }}px;
+  }
+</style>
+
+<div
+  class="diagnostic-result-hero-banner color-{{ section.settings.color_scheme }}"
+  style="padding-top: {{ section_padding_top }}px; padding-bottom: {{ section_padding_bottom }}px;"
+>
+  {% if section.settings.image_arriere_plan != blank %}
+    <div class="diagnostic-result-hero-banner__background">
+      {% render 'responsive-image', image: section.settings.image_arriere_plan, sizes: '100vw', allow_stretch: true %}
+    </div>
+  {% endif %}
+
+  <div class="diagnostic-result-hero-banner__container{% if full_width %} page-width--full{% endif %}">
+    <div class="diagnostic-result-hero-banner__content">
+      {% if section.settings.titre_du_diagnostic != blank %}
+        <h1 class="diagnostic-result-hero-banner__title h0">{{ section.settings.titre_du_diagnostic }}</h1>
+      {% endif %}
+
+      {% if section.settings.preoccupations != blank %}
+        <div class="diagnostic-result-hero-banner__preoccupations uppercase">
+          <script type="application/json" data-metaobject>
+            {{ metaobject.section_hero_banner_preoccupations.value | json }}
+          </script>
+          {{ section.settings.preoccupations }}
+          {% for preoccupation in metaobject.section_hero_banner_preoccupations.value -%}
+            {{ preoccupation -}}
+            {%- unless forloop.last %}, {% endunless -%}
+          {%- endfor -%}
+        </div>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="diagnostic-result-hero-banner__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="diagnostic-result-hero-banner__info">
+      {% if section.settings.label_du_resultat != blank %}
+        <div class="diagnostic-result-hero-banner__info-title h0">{{ section.settings.label_du_resultat }}</div>
+      {% endif %}
+
+      <ul class="diagnostic-result-hero-banner__info-list text-sm">
+        <li class="diagnostic-result-hero-banner__info-item">
+          <span class="diagnostic-result-hero-banner__info-label">
+            <span class="svg-wrapper">{{ 'icon-target.svg' | inline_asset_content }}</span>
+            {{ 'products.details.zone' | t }}
+          </span>
+          <span class="diagnostic-result-hero-banner__info-value">
+            {%- for zone in metaobject.zone.value -%}
+              {{ zone.nom -}}
+              {%- unless forloop.last %}, {% endunless -%}
+            {%- endfor -%}
+          </span>
+        </li>
+        <li class="diagnostic-result-hero-banner__info-item">
+          <span class="diagnostic-result-hero-banner__info-label">
+            <span class="svg-wrapper">{{ 'icon-user.svg' | inline_asset_content }}</span>
+            {{ 'products.details.type' | t -}}
+          </span>
+          <span class="diagnostic-result-hero-banner__info-value">
+            {%- for type in metaobject.type.value -%}
+              {{- type.nom -}}
+              {%- unless forloop.last %}, {% endunless -%}
+            {%- endfor -%}
+          </span>
+        </li>
+        <li class="diagnostic-result-hero-banner__info-item">
+          <span class="diagnostic-result-hero-banner__info-label">
+            <span class="svg-wrapper">{{ 'icon-wind.svg' | inline_asset_content }}</span>
+            {{ 'products.details.need' | t -}}
+          </span>
+          <span class="diagnostic-result-hero-banner__info-value">
+            {%- for besoin in metaobject.besoin.value -%}
+              {{ besoin.nom -}}
+              {%- unless forloop.last -%}, {% endunless -%}
+            {%- endfor -%}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bannière Résultat",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "titre_du_diagnostic",
+      "label": "Titre du diagnostic",
+      "default": "Votre type de peau"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "label_du_resultat",
+      "label": "Label du résultat",
+      "default": "Résultat"
+    },
+    {
+      "type": "richtext",
+      "id": "preoccupations",
+      "label": "Préoccupations"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "zone",
+      "label": "Zone"
+    },
+    {
+      "type": "text",
+      "id": "type",
+      "label": "Type"
+    },
+    {
+      "type": "text",
+      "id": "besoin",
+      "label": "Besoin"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_arriere_plan",
+      "label": "Image arrière-plan"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Schéma de couleurs",
+      "default": "background-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Pleine largeur",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espace supérieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espace inférieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière Résultat"
+    }
+  ]
+}
+{% endschema %}

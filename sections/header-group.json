@@ -1,0 +1,148 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Livraison à partir de 75€",
+            "link": ""
+          }
+        },
+        "announcement_c8dwPn": {
+          "type": "announcement",
+          "settings": {
+            "text": "#1 dermo-cosmétique en France depuis 15 ans",
+            "link": ""
+          }
+        },
+        "announcement_mbwxV8": {
+          "type": "announcement",
+          "settings": {
+            "text": "Noté 5 étoiles par 6421 clients",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0",
+        "announcement_c8dwPn",
+        "announcement_mbwxV8"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "show_line_separator": true,
+        "show_social": true,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "megamenu_products_BMT8nY": {
+          "type": "megamenu_products",
+          "settings": {
+            "trigger": "Produits",
+            "column_1_links": "refonte-desktop-produits-1st-colonne",
+            "column_2_links": "refonte-desktop-produits-type-de-soin",
+            "column_3_links": "refonte-desktop-produits-visage",
+            "column_4_links_1": "refonte-desktop-produits-corps",
+            "column_4_links_2": "refonte-desktop-produits-cheveux",
+            "column_5_links_1": "refonte-desktop-produits-jambes",
+            "column_5_links_2": "refonte-desktop-produits-contour-des-yeux",
+            "column_5_links_3": "refonte-desktop-produits-mains-et-pieds"
+          }
+        },
+        "megamenu_standard_WB7b98": {
+          "type": "megamenu_standard",
+          "settings": {
+            "trigger": "Préoccupations",
+            "column_1_links": "refonte-desktop-pr-ocupations-besoins",
+            "column_2_links": "cibles-pr-occupations-refonte-desktop",
+            "column_3_url": "shopify:\/\/collections\/all",
+            "column_3_image": "shopify:\/\/shop_images\/dzadzadazd.jpg",
+            "column_3_title": "Découvrez votre typologie de peau.",
+            "column_3_content": "<p>Découvrez la sélection des soins les plus adaptés à vos besoins en répondant à quelques questions sur votre peau.<\/p>"
+          }
+        },
+        "megamenu_blog_xfA7TL": {
+          "type": "megamenu_blog",
+          "settings": {
+            "trigger": "Conseils de peau",
+            "main_text": "<p>Chaque peau a ses spécificités et chaque besoin mérite une attention particulière. \u2028Pour vous aider à mieux comprendre et choisir les soins adaptés, explorez nos articles classés par catégorie.<\/p>",
+            "heading_1": "Préoccupation",
+            "text_1": "<p>Une question ou une préoccupation en dermo-cosmétique ? Explorez nos articles classés par thématiques et trouvez des réponses adaptées à vos besoins.<\/p>",
+            "cta_url_1": "\/blogs\/blog-oleassence?category=preoccupations",
+            "cta_text_1": "Voir Les articles",
+            "heading_2": "Besoin",
+            "text_2": "<p>Hydratation, anti-âge, imperfections... Quel que soit votre besoin, découvrez nos conseils et solutions dermo-cosmétiques pour une peau éclatante et en pleine santé.<\/p>",
+            "cta_url_2": "\/blogs\/blog-oleassence?category=besoins",
+            "cta_text_2": "Voir Les articles",
+            "heading_3": "Type de Peau",
+            "text_3": "<p>Chaque peau est unique ! Que la vôtre soit sèche, grasse, mixte ou sensible, trouvez des recommandations ciblées pour en prendre soin efficacement.<\/p>",
+            "cta_url_3": "\/blogs\/blog-oleassence?category=type-de-peau",
+            "cta_text_3": "Voir Les articles",
+            "last_col_image": "shopify:\/\/shop_images\/425cd268602f743584eb554914939893.png",
+            "last_col_heading": "Conseils de peau",
+            "last_col_text": "<p>Le Carnet renferme des milliers d’articles en lien avec l'univers du soin.<\/p>",
+            "last_col_url": "shopify:\/\/blogs\/blog-oleassence"
+          }
+        },
+        "drawer_k3aVPa": {
+          "type": "drawer",
+          "settings": {
+            "mobile_main_menu": "menu-mobile-refonte",
+            "mobile_footer_menu": "menu-principal-footer-refonte-mobile",
+            "image_main_menu": "shopify:\/\/shop_images\/a43a47923cb398bc6974713d1ea96f68.png",
+            "heading_main_menu": "Dermo-cosmétique naturelle et BIO",
+            "image_products_panel": "shopify:\/\/shop_images\/Container.png",
+            "image_concerns_panel": "shopify:\/\/shop_images\/dazdadzgdrfhbgd.png",
+            "image_skin_tips_panel": "shopify:\/\/shop_images\/dqsgbdfcqdv.png",
+            "mobile_best_sellers_collection": "accessoires",
+            "mobile_best_sellers_products": [
+              "huile-vierge-chanvre-biologique",
+              "pack-apaisant",
+              "pack-peau-atopique"
+            ],
+            "mobile_content_cta_url": "shopify:\/\/collections\/all",
+            "mobile_content_cta_image": "shopify:\/\/shop_images\/dzadzadazd.jpg",
+            "mobile_content_cta_title": "Découvrez votre typologie de peau.",
+            "mobile_content_cta_content": "<p>Découvrez la sélection des soins les plus adaptés à vos besoins en répondant à quelques questions sur votre peau.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "megamenu_products_BMT8nY",
+        "megamenu_standard_WB7b98",
+        "megamenu_blog_xfA7TL",
+        "drawer_k3aVPa"
+      ],
+      "settings": {
+        "logo_position": "middle-center",
+        "menu": "refonte-nouveau-menu-principal",
+        "menu_type_desktop": "mega",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "cta_url": "",
+        "cta_text": "Diagnostic",
+        "color_scheme": "scheme-2fd0985f-4905-42c2-b3fc-0e90776ac004",
+        "menu_color_scheme": "scheme-2fd0985f-4905-42c2-b3fc-0e90776ac004",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

@@ -1,0 +1,157 @@
+{{ 'section-pack-content.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="pack-content color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding"
+>
+  <div class="pack-content__container{% if section.settings.full_width %} page-width--full{% else %} page-width{% endif %}">
+    <div class="pack-content__header">
+      {% if section.settings.title != blank %}
+        <h2 class="pack-content__title h1">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="pack-content__description">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    <div class="pack-content__grid">
+      {% if product.metafields.data.pack_products != blank %}
+        <swiper-slider class="swiper">
+          <script type="application/json">
+            {
+              "allowTouchMove": true,
+              "draggable": true,
+              "slidesPerView": "auto",
+              "pagination": {
+                "type": "bullets",
+                "el": ".swiper-pagination",
+                "clickable": true,
+                "dynamicBullets": true,
+                "dynamicMainBullets": 3
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              }
+            }
+          </script>
+
+          <div class="swiper-wrapper pack-content__products">
+            {% assign pack_products = product.metafields.data.pack_products %}
+            {% for pack_product in pack_products.value %}
+              <div class="swiper-slide pack-content__product card">
+                {% render 'card-product', card_product: pack_product, featured: true, show_description: true %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="swiper-pagination"></div>
+
+          <div class="swiper-button-prev">
+            {{ 'icon-chevron-left.svg' | inline_asset_content }}
+          </div>
+          <div class="swiper-button-next">
+            {{ 'icon-chevron-left.svg' | inline_asset_content }}
+          </div>
+        </swiper-slider>
+      {% endif %}
+
+      {% assign card_promo = metaobjects.card_promo.values | where: 'enabled', true %}
+      {% if card_promo.size > 0 %}
+        <div class="pack-content__promo">
+          {% render 'card-promo', metaobject: card_promo[0], color_scheme: section.settings.card_promo_color_scheme %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contenu d'un pack",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Titre",
+      "default": "Les produits de votre pack"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Afficher les évaluations",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Schéma de couleurs",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "Carte promo"
+    },
+    {
+      "type": "paragraph",
+      "content": "La carte promo est relié à la 1ère entrée active trouvée sur le metaobject 'card_promo'."
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_promo_color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Pleine largeur",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espace supérieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espace inférieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contenu d'un pack"
+    }
+  ]
+}
+{% endschema %}

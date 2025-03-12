@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "shopify.theme-check-vscode",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-close-tag",
+    "steoates.autoimport",
+    "formulahendry.auto-rename-tag",
+    "dbaeumer.vscode-eslint",
+    "usernamehw.errorlens",
+    "oderwat.indent-rainbow",
+    "hwencc.html-tag-wrapper",
+    "ways-agency.shopify-liquid-snippets",
+    "killalau.vscode-liquid-snippets",
+    "evonux.shopify-schema-snippets",
+    "stylelint.vscode-stylelint"
+  ]
+}

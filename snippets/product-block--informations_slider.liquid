@@ -1,0 +1,75 @@
+{% liquid
+  assign has_info = false
+  for i in (1..3)
+    assign icon_handle = 'icon_' | append: i
+    assign heading_handle = 'heading_' | append: i
+
+    if block.settings[icon_handle] != blank and block.settings[heading_handle] != blank
+      assign has_info = true
+      break
+    endif
+  endfor
+%}
+
+{% if has_info %}
+  <swiper-slider class="swiper">
+    <script type="application/json">
+      {
+        "allowTouchMove": true,
+        "slidesPerView": "auto",
+        "grabCursor": true,
+        "pagination": {
+          "el": ".swiper-pagination",
+          "type": "bullets",
+          "clickable": true
+        },
+        "mousewheel": {
+          "forceToAxis": true,
+          "releaseOnEdges": true
+        },
+        "keyboard": {
+          "enabled": true
+        }
+      }
+    </script>
+
+    <div class="swiper-wrapper">
+      {% for i in (1..3) %}
+        {% liquid
+          assign icon_handle = 'icon_' | append: i
+          assign heading_handle = 'heading_' | append: i
+          assign content_handle = 'content_' | append: i
+
+          assign icon = block.settings[icon_handle]
+          assign heading = block.settings[heading_handle]
+          assign content = block.settings[content_handle]
+        %}
+
+        {% if heading != blank or text != blank %}
+          <div class="swiper-slide">
+            {% if icon and icon.icon != blank or icon.svg_code != blank %}
+              <div class="product-informations-slider__icon">
+                {%- liquid
+                  if icon.svg_code != blank
+                    echo icon.svg_code
+                  elsif icon.icon != blank
+                    echo icon.icon | image_url: width: 48 | image_tag: alt: icon.name, width: icon.icon.width, height: icon.icon.height, loading: 'lazy'
+                  endif
+                -%}
+              </div>
+            {% endif %}
+
+            <div class="product-informations-slider__texts">
+              <p class="font-body-bold">{{ heading }}</p>
+              {% if content != blank %}
+                <div class="text-sm">{{ content }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="swiper-pagination"></div>
+  </swiper-slider>
+{% endif %}

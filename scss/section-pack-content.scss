@@ -1,0 +1,139 @@
+.pack-content {
+  position: relative;
+  margin: 0 auto;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3.2rem;
+    overflow: hidden;
+  }
+
+  &__header {
+    @include respond-to(md) {
+      max-width: max(700px, 33%);
+    }
+  }
+
+  &__title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  &__grid {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    gap: 2rem;
+
+    @include respond-to(md) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 4rem;
+    }
+  }
+
+  &__products {
+    width: 100%;
+  }
+
+  &__product {
+    width: calc(100% - 32px);
+    margin-right: 0.8rem;
+
+    .card__content {
+      width: auto;
+    }
+
+    @include respond-to(md) {
+      width: calc(33.33% - 32px);
+      margin-right: 1.6rem;
+    }
+  }
+
+  &__promo {
+    width: 100%;
+
+    .card__featured-promo {
+      flex-direction: column;
+    }
+
+    @include respond-to(md) {
+      flex: 0 1 25%;
+      margin: 0;
+    }
+  }
+
+  .swiper {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+
+    @include respond-to(md) {
+      flex: 1 1 0%;
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+  }
+
+  .swiper-pagination {
+    position: absolute;
+    top: -3.6rem;
+    right: -5.6rem;
+    left: initial !important;
+  }
+
+  .swiper-button {
+    &-prev,
+    &-next {
+      top: -4.4rem;
+      width: 2.4rem;
+      min-width: 2.4rem;
+      height: 2.4rem;
+      margin-top: 0;
+      transition: opacity 0.2s ease-in-out;
+      border-radius: 50%;
+      background: var(--gradient-base-accent-1);
+      color: rgb(var(--color-base-text));
+
+      &::after {
+        display: none;
+      }
+
+      svg {
+        width: 2.4rem;
+        min-width: 2.4rem;
+        height: 2.4rem;
+        min-height: 2.4rem;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.swiper-button-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+
+    &-prev {
+      right: 8.8rem;
+      left: initial;
+    }
+
+    &-next {
+      right: 0;
+    }
+  }
+
+  .swiper:not(.swiper-initialized) {
+    .swiper-button-prev,
+    .swiper-button-next {
+      display: none;
+    }
+  }
+}

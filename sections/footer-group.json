@@ -1,0 +1,65 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "upper_footer_6kXqbw": {
+          "type": "upper_footer",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/mas.png",
+            "column_1_heading": "Notre origine",
+            "column_1_content": "<p>Le Luberon, relief d'une nature sauvage et d'un climat aride, une végétation vivace, robuste et riche en actifs, une extraction délicate et artisanale.<\/p>",
+            "column_2_heading": "Notre parti pris",
+            "column_2_content": "<p>Tout ce dont notre peau a besoin existe dans la nature, refusons tout artifice.<\/p>",
+            "column_3_title": "Notre intuition",
+            "column_3_content": "<p>Le végétal s'adapte aux agressions extérieures, son huile défend la vie contenue dans sa graine. Protégeons la vie de la peau grâce aux huiles vivantes.<\/p>"
+          }
+        },
+        "footer-0": {
+          "type": "link_list",
+          "settings": {
+            "heading": "À propos d'Oleassence",
+            "menu": "footer"
+          }
+        },
+        "footer-1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Ma commande",
+            "menu": "footer"
+          }
+        },
+        "newsletter_qWfeqT": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Recevez notre newsletter",
+            "subtext": "<p>Inscrivez-vous à notre newsletter pour être au courant de nos derniers lancements.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "upper_footer_6kXqbw",
+        "footer-0",
+        "footer-1",
+        "newsletter_qWfeqT"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_policy": false,
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

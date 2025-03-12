@@ -1,0 +1,134 @@
+.chat-card__container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2.4rem 1.6rem 1.6rem;
+  border-radius: 4px;
+  background: rgb(var(--color-background-contrast));
+  gap: 32px;
+
+  @include respond-to(md) {
+    padding: 3.2rem;
+  }
+
+  &--infos {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+
+    @include respond-to(null, md) {
+      order: 2;
+    }
+
+    .h5,
+    .h4,
+    p {
+      margin: 0;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  &--header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  &--portrait {
+    flex: 0 0 64px;
+    height: 64px;
+
+    @include respond-to(md) {
+      flex: 0 0 80px;
+      height: 80px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+    }
+  }
+
+  &--vignettes-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+    cursor: pointer;
+  }
+
+  &--vignette {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: #fff;
+    gap: 16px;
+
+    @include respond-to(md) {
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    &:hover {
+      .chat-card__container--arrow-container {
+        transform: translateX(6px);
+      }
+    }
+  }
+
+  &--svg-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #fbeee0;
+
+    @include respond-to(null, md) {
+      order: 1;
+    }
+  }
+
+  &--arrow-container {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+
+    @include respond-to(null, md) {
+      justify-content: flex-end;
+      order: 1;
+    }
+  }
+
+  &--overlay {
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &:hover {
+    > a > .chat-card__container--arrow-container {
+      transform: translateX(6px);
+    }
+  }
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}

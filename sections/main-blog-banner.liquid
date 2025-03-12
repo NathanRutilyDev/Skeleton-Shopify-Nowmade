@@ -1,0 +1,57 @@
+{{ 'section-blog-banner.css' | asset_url | stylesheet_tag }}
+{{ 'component-breadcrumbs.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.image != blank %}
+  {% render 'responsive-image',
+    image: section.settings.image,
+    loading: 'eager',
+    allow_stretch: true,
+    class: 'hero-banner__image'
+  %}
+{% else %}
+  <div class="responsive-image-wrapper">
+    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+  </div>
+{% endif %}
+
+<div class="hero-banner__content color-{{ section.settings.color_scheme }} gradient">
+  <div class="hero-banner__breadcrumb">
+    {% render 'breadcrumb' %}
+  </div>
+  <div class="hero-banner__main-content">
+    <h1 class="hero-banner__title">{{ blog.title }}</h1>
+    <div class="hero-banner__text font-body-bold">
+      {{ section.settings.text }}
+    </div>
+    {% render 'search-article-bar' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Conseils de peau",
+  "class": "hero-banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image arrière-plan"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte personnalisé"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["blog"]
+  }
+}
+{% endschema %}

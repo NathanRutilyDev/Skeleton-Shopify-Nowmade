@@ -1,0 +1,46 @@
+{%- liquid
+  assign days_english = 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday' | split: ','
+  assign months_english = 'January,February,March,April,May,June,July,August,September,October,November,December' | split: ','
+
+  assign monday = 'date.mon' | t
+  assign tuesday = 'date.tue' | t
+  assign wednesday = 'date.wed' | t
+  assign thursday = 'date.thu' | t
+  assign friday = 'date.fri' | t
+  assign saturday = 'date.sat' | t
+  assign sunday = 'date.sun' | t
+  assign current_days_array = monday | append: ',' | append: tuesday | append: ',' | append: wednesday | append: ',' | append: thursday | append: ',' | append: friday | append: ',' | append: saturday | append: ',' | append: sunday | split: ','
+
+  assign jan = 'date.jan' | t
+  assign feb = 'date.feb' | t
+  assign mar = 'date.mar' | t
+  assign apr = 'date.apr' | t
+  assign may = 'date.may' | t
+  assign jun = 'date.jun' | t
+  assign jul = 'date.jul' | t
+  assign aug = 'date.aug' | t
+  assign sep = 'date.sep' | t
+  assign oct = 'date.oct' | t
+  assign nov = 'date.nov' | t
+  assign dec = 'date.dec' | t
+  assign current_months_array = jan | append: ',' | append: feb | append: ',' | append: mar | append: ',' | append: apr | append: ',' | append: may | append: ',' | append: jun | append: ',' | append: jul | append: ',' | append: aug | append: ',' | append: sep | append: ',' | append: oct | append: ',' | append: nov | append: ',' | append: dec | split: ','
+  assign short_slice = 3
+
+  for _i in (0..11)
+    if _i < 7
+      assign current_days_array[_i] = current_days_array[_i] | t
+      assign short_date_format_english = days_english[_i] | slice: 0, short_slice
+      assign short_date_format_current = current_days_array[_i] | slice: 0, short_slice
+      assign date_string = date_string | replace: days_english[_i], current_days_array[_i] | replace: short_date_format_english, short_date_format_current
+    endif
+
+    assign current_months_array[_i] = current_months_array[_i] | t
+    assign short_month_format_english = months_english[_i] | slice: 0, short_slice
+    assign short_month_format_current = current_months_array[_i] | slice: 0, short_slice
+    assign date_string = date_string | replace: months_english[_i], current_months_array[_i] | replace: short_month_format_english, short_month_format_current
+  endfor
+-%}
+
+<span>
+  {{ 'sections.cart.shipping_announce_html' | t: date: date_string }}
+</span>

@@ -1,0 +1,33 @@
+{% if block.settings.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+<div class="article-block__bullet-list">
+  {% for i in (1..5) %}
+    {%- liquid
+      assign bullet_title_path = 'title_' | append: i
+      assign bullet_text_path = 'text_' | append: i
+
+      assign bullet_title = block.settings[bullet_title_path]
+      assign bullet_text = block.settings[bullet_text_path]
+    -%}
+
+    {% if bullet_title != blank or bullet_text != blank %}
+      <div class="article-block__bullet-list--item">
+        <div class="article-block__bullet-list--number">
+          {{ forloop.index }}
+        </div>
+        <div class="article-block__bullet-list--content">
+          <h3 class="article-block__bullet-list--title">{{ bullet_title }}</h3>
+          <div class="article-block__bullet-list--text">
+            {{ bullet_text }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

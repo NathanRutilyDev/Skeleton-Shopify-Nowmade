@@ -1,0 +1,120 @@
+{% comment %}
+  Renders a header search modal. Should be used with 'header.liquid'
+
+  Accepts:
+  - input_id: {String} Id for the search input element (required)
+  - text: {String} Text to display in the search icon (optional)
+  - desktop: {Boolean} Whether to show the search icon on desktop (optional)
+  - mobile: {Boolean} Whether to show the search icon on mobile (optional)
+
+  Usage:
+  {% render 'header-search', input_id: 'My-Id'%}
+{% endcomment %}
+
+<details-modal
+  class="header__search {% if desktop %} medium-down-hide{% endif %}{% if mobile %} large-up-hide{% endif %}"
+  aria-label="{{ 'general.search.search' | t }}"
+>
+  <details>
+    <summary
+      class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle"
+      aria-haspopup="dialog"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <span>
+        {% if text and text_position == 'left' %}
+          {{ 'general.search.search' | t }}
+        {% endif %}
+        <span class="svg-wrapper">
+          {{- 'icon-search.svg' | inline_asset_content -}}
+        </span>
+        <span class="svg-wrapper header__icon-close">
+          {{- 'icon-close.svg' | inline_asset_content -}}
+        </span>
+        {% if text and text_position == 'right' %}
+          {{ 'general.search.search' | t }}
+        {% endif %}
+      </span>
+    </summary>
+    <div
+      class="search-modal modal__content gradient"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <div class="modal-overlay"></div>
+      <div
+        class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
+        tabindex="-1"
+      >
+        {%- if settings.predictive_search_enabled -%}
+          <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+        {%- else -%}
+          <search-form class="search-modal__form">
+        {%- endif -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+          <div class="field">
+            <input
+              class="search__input field__input"
+              id="{{ input_id }}"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ 'general.search.search' | t }}"
+              {%- if settings.predictive_search_enabled -%}
+                role="combobox"
+                aria-expanded="false"
+                aria-owns="predictive-search-results"
+                aria-controls="predictive-search-results"
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                autocorrect="off"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              {%- endif -%}
+            >
+            <label class="field__label" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
+            <input type="hidden" name="options[prefix]" value="last">
+            <button
+              type="reset"
+              class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
+              aria-label="{{ 'general.search.reset' | t }}"
+            >
+              <span class="svg-wrapper">
+                {{- 'icon-reset.svg' | inline_asset_content -}}
+              </span>
+            </button>
+            <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+              <span class="svg-wrapper">
+                {{- 'icon-search.svg' | inline_asset_content -}}
+              </span>
+            </button>
+          </div>
+
+          {%- if settings.predictive_search_enabled -%}
+            <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+              {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+            </div>
+
+            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+          {%- endif -%}
+        </form>
+        {%- if settings.predictive_search_enabled -%}
+          </predictive-search>
+        {%- else -%}
+          </search-form>
+        {%- endif -%}
+        <button
+          type="button"
+          class="search-modal__close-button modal__close-button link link--text focus-inset"
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </div>
+    </div>
+  </details>
+</details-modal>

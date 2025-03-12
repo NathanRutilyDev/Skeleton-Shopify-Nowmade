@@ -1,0 +1,56 @@
+{% comment %}
+  Renders a blog megamenu.
+  Usage:
+  {% render 'header-megamenu-blog', block: block %}
+{% endcomment %}
+
+<div class="mega-menu-blog page-width">
+  {% comment %}Colonne principale{% endcomment %}
+  <div class="mega-menu__column">
+    <div class="mega-menu-blog__main">
+      {% if block.settings.main_text != blank %}
+        {{ block.settings.main_text }}
+      {% endif %}
+    </div>
+    <div class="mega-menu-blog__grid">
+      {% comment %}Colonnes 1-3{% endcomment %}
+      {% for i in (1..3) %}
+        {% liquid
+          assign heading_path = 'heading_' | append: i
+          assign text_path = 'text_' | append: i
+          assign cta_url_path = 'cta_url_' | append: i
+          assign cta_text_path = 'cta_text_' | append: i
+          assign heading = block.settings[heading_path]
+          assign text = block.settings[text_path]
+          assign cta_url = block.settings[cta_url_path]
+          assign cta_text = block.settings[cta_text_path]
+        %}
+        <a href="{{ cta_url }}" class="mega-menu-blog__column mega-menu__link">
+          {% if heading != blank %}
+            <h3 class="mega-menu-blog__heading">{{ heading }}</h3>
+          {% endif %}
+          {% if text != blank %}
+            <div class="mega-menu-blog__text">{{ text }}</div>
+          {% endif %}
+          {% if cta_url != blank and cta_text != blank %}
+            <div class="link link--text link-with-icon uppercase">
+              <span>{{ cta_text }}</span>
+              <span class="svg-wrapper">
+                {{ 'icon-arrow.svg' | inline_asset_content }}
+              </span>
+            </div>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% comment %}Dernière colonne{% endcomment %}
+  <div class="mega-menu__column mega-menu__column--last">
+    {% liquid
+      if block.settings.last_col_image != blank
+        render 'megamenu-item-image', image: block.settings.last_col_image, url: block.settings.last_col_url, title: block.settings.last_col_heading, content: block.settings.last_col_text
+      endif
+    %}
+  </div>
+</div>

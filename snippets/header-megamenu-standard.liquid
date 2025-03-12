@@ -1,0 +1,37 @@
+{% comment %}
+  Renders a standard megamenu.
+  Usage:
+  {% render 'header-megamenu-', block: block %}
+{% endcomment %}
+
+<div class="mega-menu-standard page-width">
+  <div class="mega-menu__menus">
+    {% comment %}Première colonne{% endcomment %}
+    <div class="mega-menu__column">
+      {% liquid
+        if block.settings.column_1_links != blank
+          assign first_link = block.settings.column_1_links.links | first
+          render 'megamenu-item-menu', link: first_link
+        endif
+      %}
+    </div>
+    {% comment %}Deuxième colonne{% endcomment %}
+    <div class="mega-menu__column">
+      {% liquid
+        if block.settings.column_2_links != blank
+          assign first_link = block.settings.column_2_links.links | first
+          render 'megamenu-item-menu', link: first_link
+        endif
+      %}
+    </div>
+  </div>
+
+  {% comment %}Troisième colonne{% endcomment %}
+  <div class="mega-menu__column mega-menu__column--last">
+    {% liquid
+      if block.settings.column_3_image != blank
+        render 'megamenu-item-image', image: block.settings.column_3_image, url: block.settings.column_3_url, title: block.settings.column_3_title, content: block.settings.column_3_content
+      endif
+    %}
+  </div>
+</div>

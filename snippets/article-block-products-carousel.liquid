@@ -1,0 +1,72 @@
+{% if block.settings.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+{% if block.settings.products != blank %}
+  <swiper-slider class="swiper article-block__products-carousel">
+    <script type="application/json">
+      {
+        "allowTouchMove": true,
+        "slidesPerView": "auto",
+        "grabCursor": true,
+        "mousewheel": {
+          "forceToAxis": true,
+          "releaseOnEdges": true
+        },
+        "keyboard": {
+          "enabled": true
+        },
+        "navigation": {
+          "nextEl": ".swiper-button-next",
+          "prevEl": ".swiper--button-prev"
+        },
+        "pagination": {
+          "type": "bullets",
+          "el": ".swiper-pagination",
+          "clickable": true,
+          "dynamicMainBullets": 3
+        },
+        "spaceBetween": 16
+      }
+    </script>
+
+    <div class="article-block__products-carousel--header">
+      {% if block.settings.content_heading != blank %}
+        <div class="article-block__products-carousel--title h4">{{ block.settings.content_heading }}</div>
+      {% endif %}
+      <div class="article-block__products-carousel--navigation">
+        <div class="swiper-button-prev medium-down-hide">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+        <div class="swiper-pagination medium-up-hide"></div>
+        <div class="swiper-pagination-fraction medium-down-hide"></div>
+        <div class="swiper-button-next medium-down-hide">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="swiper-wrapper">
+      {% for product in block.settings.products %}
+        <div class="swiper-slide">
+          {% render 'card-product-horizontal',
+            card_product: product,
+            media_aspect_ratio: 'square',
+            image_shape: false,
+            show_secondary_image: false,
+            show_vendor: false,
+            show_rating: true,
+            lazy_load: lazy_load,
+            skip_styles: false,
+            quick_add: 'standard',
+            section_id: section.id
+          %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </swiper-slider>
+{% endif %}

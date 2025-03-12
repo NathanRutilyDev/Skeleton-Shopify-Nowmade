@@ -1,0 +1,68 @@
+.hero-banner {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 480px;
+
+  @include respond-to(md) {
+    min-height: 400px;
+  }
+
+  > .responsive-image-wrapper {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__content {
+    display: flex;
+    position: relative;
+    z-index: 0;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 40px 16px;
+    background: linear-gradient(180deg, rgba(68, 61, 54, 0.1) 0%, rgba(68, 61, 54, 0.8));
+
+    @include respond-to(md) {
+      padding: 64px;
+    }
+  }
+
+  &__breadcrumb {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: center;
+    align-items: center;
+    align-self: flex-start;
+    width: auto;
+    padding: 24px 16px;
+    gap: 8px;
+
+    @include respond-to(md) {
+      top: 40px;
+      left: 64px;
+    }
+  }
+
+  &__main-content {
+    align-self: center;
+    text-align: center;
+  }
+
+  &__title {
+    margin-bottom: 16px;
+  }
+
+  &__text {
+    margin-bottom: 32px;
+    color: rgb(var(--color-foreground));
+  }
+}

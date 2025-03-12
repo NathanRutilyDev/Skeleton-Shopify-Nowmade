@@ -1,0 +1,64 @@
+<swiper-slider class="swiper product-products-slider product-complementary__slider">
+  <script type="application/json">
+    {
+      "allowTouchMove": true,
+      "slidesPerView": "auto",
+      "grabCursor": true,
+      "pagination": {
+        "el": ".swiper-pagination",
+        "type": "fraction"
+      },
+      "navigation": {
+        "nextEl": ".swiper-button-next",
+        "prevEl": ".swiper-button-prev"
+      },
+      "mousewheel": {
+        "forceToAxis": true,
+        "releaseOnEdges": true
+      },
+      "keyboard": {
+        "enabled": true
+      }
+    }
+  </script>
+  <div class="product-products-slider__header">
+    <div class="h4">{{ block.settings.block_heading }}</div>
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <div class="product-products-slider__actions">
+        <div class="swiper-button-prev">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div
+    class="swiper-wrapper"
+  >
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      {%- for complementary_product in recommendations.products %}
+        <div class="swiper-slide">
+          {% render 'card-product-horizontal',
+            card_product: complementary_product,
+            media_aspect_ratio: 'square',
+            image_shape: false,
+            show_secondary_image: false,
+            show_vendor: false,
+            show_rating: true,
+            lazy_load: lazy_load,
+            skip_styles: false,
+            quick_add: 'standard',
+            section_id: section.id,
+            allow_details: true
+          %}
+        </div>
+      {%- endfor -%}
+    {% endif %}
+  </div>
+</swiper-slider>
+{% unless recommendations.performed and recommendations.products_count > 0 %}
+  {%- render 'loading-spinner', class: 'loading__spinner' -%}
+{% endunless %}

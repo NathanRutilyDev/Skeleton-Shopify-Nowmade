@@ -1,0 +1,52 @@
+{% if block.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+
+<div class="article-block__accordions {% if block.accent_background %}article-block__accordions--accent{% else %}article-block__accordions--simple{% endif %}">
+  {% for i in (1..5) %}
+    {%- liquid
+      assign accordion_title_path = 'title_' | append: i
+      assign accordion_text_path = 'content_' | append: i
+
+      assign accordion_title = block[accordion_title_path]
+      assign accordion_text = block[accordion_text_path]
+    -%}
+
+    {% if accordion_title != blank or accordion_text != blank %}
+      <div class="article-block__accordions--item">
+        <details
+          id="Details-{{ forloop.index }}"
+          {% if block.first_open and forloop.first %}
+            open
+          {% endif %}
+        >
+          <summary
+            id="Summary-{{ forloop.index }}"
+            class="article-block__accordions--summary"
+          >
+            <h3 class="article-block__accordions--title">
+              {{ accordion_title }}
+            </h3>
+            <span class="svg-wrapper">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+              {{- 'icon-minus.svg' | inline_asset_content -}}
+            </span>
+          </summary>
+          <div
+            class="article-block__accordions--content rte"
+            id="CollapsibleAccordion-{{ forloop.index }}"
+            role="region"
+            aria-labelledby="Summary-{{ forloop.index }}"
+          >
+            {{ accordion_text }}
+          </div>
+        </details>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

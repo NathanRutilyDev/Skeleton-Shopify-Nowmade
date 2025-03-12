@@ -1,0 +1,18 @@
+{
+  "overrides": [
+    {
+      "files": "*.liquid",
+      "options": {
+        "singleQuote": false
+      }
+    },
+    {
+      "files": "*.scss",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "printWidth": 120,
+  "singleQuote": true
+}

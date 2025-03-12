@@ -1,0 +1,605 @@
+{{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-diagnostic-ordonnance.css' | asset_url | stylesheet_tag }}
+
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if section.settings.quick_add == 'bulk' -%}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<script src="{{ 'diagnostic-ordonnance-see-more.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  if settings.animations_reveal_on_scroll
+    assign animation_index = 1
+  endif
+-%}
+
+<ordonnance-product-list
+  class="ordonnance section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }}"
+  data-ordonnance-value="{{ metaobject.id_du_resultat }}"
+>
+  <div class="page-width">
+    <h2 class="ordonnance__heading h1">{{ 'sections.main-diagnostic-ordonnance.header.title' | t }}</h2>
+    <div class="ordonnance__header--mobile medium-hide large-up-hide">
+      <div class="ordonnance__header__details">
+        <div class="ordonnance__header__text">{{ 'sections.main-diagnostic-ordonnance.header.text' | t }}</div>
+        <button
+          type="button"
+          class="ordonnance__header__button button button--primary"
+          data-add-all-products="false"
+        >
+          <span class="ordonnance__header__button--add">
+            {{- 'sections.main-diagnostic-ordonnance.add_all' | t -}}
+          </span>
+          <span class="ordonnance__header__button--clean">
+            {{- 'sections.main-diagnostic-ordonnance.clean_all' | t -}}
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="ordonnance__inner grid grid--1-col-tablet-down">
+      <div class="ordonnance__left--block grid__item">
+        <div class="ordonnance__header--desktop small-hide">
+          <div class="ordonnance__header__details">
+            <div class="ordonnance__header__text">{{ 'sections.main-diagnostic-ordonnance.header.text' | t }}</div>
+            <button
+              type="button"
+              class="ordonnance__header__button button button--primary"
+              data-add-all-products="false"
+            >
+              <span class="ordonnance__header__button--add">
+                {{- 'sections.main-diagnostic-ordonnance.add_all' | t -}}
+              </span>
+              <span class="ordonnance__header__button--clean">
+                {{- 'sections.main-diagnostic-ordonnance.clean_all' | t -}}
+              </span>
+            </button>
+          </div>
+        </div>
+        {% for i in (1..3) %}
+          {% liquid
+            assign phase_path = 'phase_' | append: i
+            assign phase_products = section.settings[phase_path]
+          %}
+
+          {% if phase_products %}
+            <div class="ordonnance__phase">
+              <h3 class="ordonnance__phase__heading">
+                {{ 'sections.main-diagnostic-ordonnance.phase_label' | t: index: i }}
+              </h3>
+
+              {%- if product.metafields.judgeme.badge != blank and section.settings.show_rating -%}
+                {% assign review_note = product.metafields.judgeme.badge
+                  | split: "data-average-rating='"
+                  | last
+                  | split: "'"
+                  | first
+                  | times: 1
+                  | round: 2
+                -%}
+                {% if review_note > 0 %}
+                  <a
+                    href="{{ product.url }}#judgeme_product_reviews"
+                    class="card__reviews"
+                    data-id="{{ product.id }}"
+                  >
+                    {%- liquid
+                      assign review_count = product.metafields.judgeme.badge | split: "data-number-of-reviews='" | last | split: "'" | first
+                      assign full_star = review_note | divided_by: 1 | floor
+                      assign half_star = review_note | minus: full_star | ceil
+                      assign empty_star = 5 | minus: full_star | minus: half_star | ceil
+                    -%}
+
+                    <div class="card__reviews--stars">
+                      {% for i in (1..full_star) %}
+                        <span class="svg-wrapper">
+                          {{- 'icon-star-full.svg' | inline_asset_content -}}
+                        </span>
+                      {% endfor %}
+                      {% if half_star > 0 %}
+                        <span class="svg-wrapper">
+                          {{- 'icon-star-half.svg' | inline_asset_content -}}
+                        </span>
+                      {% endif %}
+                      {% if empty_star > 0 %}
+                        {% for i in (1..empty_star) %}
+                          <span class="svg-wrapper">
+                            {{- 'icon-star-empty.svg' | inline_asset_content -}}
+                          </span>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    <div class="card__reviews--note">
+                      <span>{{ review_note | round: 2 }}</span>
+                      <span>{{ 'products.product.reviews' | t: count: review_count }}</span>
+                    </div>
+                  </a>
+                {% endif %}
+              {%- endif -%}
+
+              <div class="ordonnance__phase__products">
+                {% for product in phase_products %}
+                  <div
+                    class="ordonnance__phase__product{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                    data-variant-id="{{ product.variants.first.id }}"
+                    {% if settings.animations_reveal_on_scroll %}
+                      data-cascade
+                      style="--animation-order: {{ animation_index }};"
+                      {% assign animation_index = animation_index | plus: 1 %}
+                    {% endif %}
+                  >
+                    <template>
+                      <div class="ordonnance__main--product__container">
+                        <div class="ordonnance__main--product__image">
+                          {{
+                            product.featured_image
+                            | image_url: width: 50
+                            | image_tag:
+                              alt: product.featured_image,
+                              loading: 'lazy',
+                              width: product.featured_image.width,
+                              height: product.featured_image.height
+                          }}
+                        </div>
+                        <div class="ordonnance__main--product__info">
+                          <div class="ordonnance__main--product__header">
+                            <p class="ordonnance__main--product__heading">
+                              {{ product.title | escape }}
+                            </p>
+                            <button
+                              class="ordonnance__main--product__remove"
+                              data-variant-id="{{ product.variants.first.id }}"
+                              role="button"
+                              data-remove-product
+                            >
+                              <span class="svg-wrapper">{{ 'icon-close.svg' | inline_asset_content }}</span>
+                            </button>
+                          </div>
+                          <p class="ordonnance__main--product__variant">
+                            {{ product.variants.first.metafields.data.volume.value }}
+                          </p>
+                        </div>
+                      </div>
+                    </template>
+                    {%- capture sizes -%}
+                      (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+                      (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)
+                    {%- endcapture -%}
+                    {%- liquid
+                      if product.featured_image != blank
+                        echo product.featured_image | image_url: width: 1500 | image_tag: sizes: sizes, widths: '165, 360, 535, 750, 1070, 1500'
+                      else
+                        echo 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg'
+                      endif
+                    -%}
+                    <div class="ordonnance__phase__content">
+                      <div class="ordonnance__content">
+                        <script type="application/json" data-product-info>
+                          {
+                            "variantId": "{{ product.variants.first.id }}",
+                            "title": "{{ product.title | escape }}",
+                            "volume": "{{ product.variants.first.metafields.data.volume.value | default: null }}",
+                            "price": "{{  product.price | money }}",
+                            "image": "{{ product.featured_image | image_url: width: 200 }}"
+                          }
+                        </script>
+                        <h2 class="ordonnance__product__title">
+                          {{ product.title | escape }}
+                        </h2>
+
+                        <div class="ordonnance__description rte {{ section.settings.text_style }}">
+                          {{ product.description }}
+                        </div>
+                        <modal-opener data-modal="#QuickAdd-{{ product.id }}">
+                          <button
+                            id="{{ product.handle | escape }}-submit"
+                            type="submit"
+                            name="add"
+                            class="quick-add__submit button button--full-width"
+                            aria-haspopup="dialog"
+                            aria-labelledby="{{ product.handle | escape }}-submit title-{{ section.id }}-{{ product.id }}"
+                            data-product-url="{{ product.url }}"
+                          >
+                            {{ 'sections.main-diagnostic-ordonnance.see_more' | t }}
+                            {%- render 'loading-spinner' -%}
+                          </button>
+                        </modal-opener>
+                        <quick-add-modal id="QuickAdd-{{ product.id }}" class="quick-add-modal">
+                          <div
+                            role="dialog"
+                            aria-label="{{ 'products.product.choose_product_options' | t: product_name: product.title | escape }}"
+                            aria-modal="true"
+                            class="quick-add-modal__content global-settings-popup"
+                            tabindex="-1"
+                          >
+                            <button
+                              id="ModalClose-{{ product.id }}"
+                              type="button"
+                              class="quick-add-modal__toggle"
+                              aria-label="{{ 'accessibility.close' | t }}"
+                            >
+                              <span class="svg-wrapper">
+                                {{ 'icon-close.svg' | inline_asset_content }}
+                              </span>
+                            </button>
+                            <div id="QuickAddInfo-{{ product.id }}" class="quick-add-modal__content-info"></div>
+                          </div>
+                        </quick-add-modal>
+                        <div class="ordonnance__product__actions">
+                          <div
+                            id="price-{{ section.id }}"
+                            class="ordonnance__product__price"
+                            role="status"
+                          >
+                            {%- render 'price', product: product, price_class: 'price--large' -%}
+                            {% if product.variants.first.metafields.data.volume %}
+                              <div class="ordonnance__product__capacity">
+                                {{ product.variants.first.metafields.data.volume.value }}
+                              </div>
+                            {% endif %}
+                          </div>
+                          <button
+                            type="button"
+                            data-variant-id="{{ product.variants.first.id }}"
+                            data-add-product
+                            class="ordonnance__product__add button button-primary"
+                            {% unless product.available %}
+                              disabled
+                            {% endunless %}
+                          >
+                            <span class="svg-wrapper">
+                              {{ 'icon-checkmark.svg' | inline_asset_content }}
+                            </span>
+                            <span class="ordonnance__product__add--text">
+                              {{- 'sections.main-diagnostic-ordonnance.add' | t -}}
+                            </span>
+                            <span class="ordonnance__product__add--added">
+                              {{- 'sections.main-diagnostic-ordonnance.added' | t -}}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="ordonnance__right--block grid__item">
+        <div class="ordonnance__right__inner">
+          <details class="ordonnance__main" data-added-products="false">
+            <summary class="ordonnance__main--summary">
+              {% if section.settings.main_image != blank %}
+                <div class="ordonnance__main--image">
+                  {{
+                    section.settings.main_image
+                    | image_url: width: 200
+                    | image_tag:
+                      alt: section.settings.main_image,
+                      loading: 'lazy',
+                      width: section.settings.main_image.width,
+                      height: section.settings.main_image.height
+                  }}
+                </div>
+              {% endif %}
+              <div class="ordonnance__main--info">
+                <div class="h4">{{ 'sections.main-diagnostic-ordonnance.header.title' | t }}</div>
+                <div class="ordonnance__main--content">
+                  <span class="ordonnance__main--added-count" data-bundle-count></span>
+                  {{- 'sections.main-diagnostic-ordonnance.selected-products' | t -}}
+                  <span class="svg-wrapper">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
+                </div>
+                <div class="ordonnance__main--empty">
+                  {{ 'sections.main-diagnostic-ordonnance.empty' | t }}
+                </div>
+              </div>
+            </summary>
+            <div class="ordonnance__main--products" data-added-products-result></div>
+          </details>
+          <div class="ordonnance__main--footer">
+            <div class="ordonnance__summary__total">
+              <h5>{{ 'sections.main-diagnostic-ordonnance.header.title' | t }}</h5>
+              <div class="ordonnance__summary__total--price" data-bundle-total>0€</div>
+            </div>
+            <div class="ordonnance__summary__delivery">
+              <div class="ordonnance__delivery__label">{{ 'sections.main-diagnostic-ordonnance.shipping' | t }}</div>
+              <div class="ordonnance__delivery__value">
+                {{ 'sections.main-diagnostic-ordonnance.shipping-free' | t }}
+              </div>
+            </div>
+
+            <div class="ordonnance__summary__info">
+              {{
+                'sections.main-diagnostic-ordonnance.ordonnance-info'
+                | t: ordonnacen_code: metaobject.ordonnance_code
+              }}
+            </div>
+
+            <button
+              type="submit"
+              name="add"
+              class="ordonnance__submit button button--full-width button--primary"
+              disabled
+            >
+              <span data-bundle-empty>
+                {{ 'sections.main-diagnostic-ordonnance.empty' | t }}
+              </span>
+              <span data-bundle-button-text>{{ 'sections.main-diagnostic-ordonnance.add-to-cart' | t }}</span>
+              <span class="ordonnance__submit--total" data-bundle-total>0€</span>
+              {%- render 'loading-spinner' -%}
+            </button>
+
+            <div class="ordonnance__shipping">
+              {{ 'icon-truck-delivery.svg' | inline_asset_content }}
+              <div class="ordonnance__shipping__text">
+                {{ 'sections.main-diagnostic-ordonnance.delivery-date' | t }}
+              </div>
+            </div>
+          </div>
+          <div class="ordonnance__right__gift">
+            {{
+              section.settings.present_image
+              | image_url: width: 140
+              | image_tag:
+                alt: section.settings.present_image,
+                loading: 'lazy',
+                width: section.settings.present_image.width,
+                height: section.settings.present_image.height
+            }}
+            <div class="ordonnance__gift__content">
+              {% if section.settings.icon_metaobject
+                and section.settings.icon_metaobject.icon != blank
+                or section.settings.icon_metaobject.svg_code != blank
+              %}
+                <div class="ordonnance__gift__icon">
+                  {%- liquid
+                    if section.settings.icon_metaobject.svg_code != blank
+                      echo section.settings.icon_metaobject.svg_code
+                    elsif section.settings.icon_metaobject.icon != blank
+                      echo section.settings.icon_metaobject.icon | image_url: width: 48 | image_tag: alt: section.settings.icon_metaobject.name, width: section.settings.icon_metaobject.icon.width, height: section.settings.icon_metaobject.icon.height, loading: 'lazy'
+                    endif
+                  -%}
+                </div>
+              {% endif %}
+              <div class="ordonnance__gift__text">{{ section.settings.present_text }}</div>
+            </div>
+          </div>
+          {% if section.settings.chat_image != blank
+            or section.settings.chat_title != blank
+            or section.settings.chat_text != blank
+          %}
+            {% render 'chat-card',
+              image: section.settings.chat_image,
+              heading: section.settings.chat_title,
+              content: section.settings.chat_text
+            %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ordonnance__sticky" data-added-products="false">
+    <div class="ordonnance__sticky__content">
+      <details class="ordonnance__main" data-added-products="false">
+        <summary class="ordonnance__main--summary">
+          {% if section.settings.main_image != blank %}
+            <div class="ordonnance__main--image">
+              {{
+                section.settings.main_image
+                | image_url: width: 200
+                | image_tag:
+                  alt: section.settings.main_image,
+                  loading: 'lazy',
+                  width: section.settings.main_image.width,
+                  height: section.settings.main_image.height
+              }}
+            </div>
+          {% endif %}
+          <div class="ordonnance__main--info">
+            <div class="h4">{{ 'sections.main-diagnostic-ordonnance.typology' | t: typology: metaobject.label }}</div>
+            <div class="ordonnance__main--content">
+              <span class="ordonnance__main--added-count" data-bundle-count></span>
+              {{- 'sections.main-diagnostic-ordonnance.selected-products' | t -}}
+              <span class="svg-wrapper">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
+            </div>
+            <div class="ordonnance__main--empty">
+              {{ 'sections.main-diagnostic-ordonnance.empty' | t }}
+            </div>
+          </div>
+        </summary>
+        <div class="ordonnance__main--products" data-added-products-result></div>
+      </details>
+      <div class="ordonnance__main--footer">
+        <div class="ordonnance__summary__total">
+          <h5>{{ 'sections.main-diagnostic-ordonnance.header.title' | t }}</h5>
+          <div class="ordonnance__summary__total--price" data-bundle-total>0€</div>
+        </div>
+        <div class="ordonnance__summary__delivery">
+          <div class="ordonnance__delivery__label">{{ 'sections.main-diagnostic-ordonnance.shipping' | t }}</div>
+          <div class="ordonnance__delivery__value">
+            {{ 'sections.main-diagnostic-ordonnance.shipping-free' | t }}
+          </div>
+        </div>
+        <button
+          type="submit"
+          name="add"
+          class="ordonnance__submit button button--full-width button--primary"
+          disabled
+        >
+          <span data-bundle-empty>
+            {{ 'sections.main-diagnostic-ordonnance.empty' | t }}
+          </span>
+          <span data-bundle-button-text>{{ 'sections.main-diagnostic-ordonnance.add-to-cart' | t }}</span>
+          <span class="ordonnance__submit--total" data-bundle-total>0€</span>
+          {%- render 'loading-spinner' -%}
+        </button>
+      </div>
+    </div>
+  </div>
+</ordonnance-product-list>
+
+{% schema %}
+{
+  "name": "Ordonnance",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "product_list",
+      "id": "phase_1",
+      "label": "Phase 1"
+    },
+    {
+      "type": "product_list",
+      "id": "phase_2",
+      "label": "Phase 2"
+    },
+    {
+      "type": "product_list",
+      "id": "phase_3",
+      "label": "Phase 3"
+    },
+    {
+      "type": "header",
+      "content": "Colonne droite - Partie principale"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Colonne droite - Cadeau"
+    },
+    {
+      "type": "image_picker",
+      "id": "present_image",
+      "label": "Image"
+    },
+    {
+      "type": "metaobject",
+      "id": "icon_metaobject",
+      "label": "Icône",
+      "metaobject_type": "icon"
+    },
+    {
+      "type": "richtext",
+      "id": "present_text",
+      "label": "Texte"
+    },
+    {
+      "type": "header",
+      "content": "Colonne droite - Chat"
+    },
+    {
+      "type": "image_picker",
+      "id": "chat_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "chat_title",
+      "label": "Titre"
+    },
+    {
+      "type": "richtext",
+      "id": "chat_text",
+      "label": "Texte"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-collection.settings.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "none",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "info": "t:sections.main-collection-product-grid.settings.quick_add.info",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+        },
+        {
+          "value": "bulk",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ordonnance"
+    }
+  ]
+}
+{% endschema %}

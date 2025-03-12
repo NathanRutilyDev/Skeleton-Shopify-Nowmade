@@ -1,0 +1,43 @@
+{% if block.settings.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+
+<div class="article-block__images-list">
+  {% for i in (1..5) %}
+    {%- liquid
+      assign image_path = 'image_' | append: i
+      assign heading_path = 'heading_' | append: i
+      assign text_path = 'text_' | append: i
+
+      assign image = block.settings[image_path]
+      assign heading = block.settings[heading_path]
+      assign text = block.settings[text_path]
+    -%}
+    {% if image != blank %}
+      <div class="article-block__images-list--item">
+        {{
+          image
+          | image_url: width: 130
+          | image_tag:
+            alt: image.alt,
+            loading: 'lazy',
+            width: image.width,
+            height: image.height,
+            class: 'article-block__images-list--image'
+        }}
+
+        <div class="article-block__images-list--content">
+          <h5 class="article-block__images-list--title">{{ heading }}</h5>
+          <div class="article-block__images-list--text">
+            {{ text }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

@@ -1,0 +1,36 @@
+{%- liquid
+  assign image_class = 'megamenu-item-image__image'
+  if image != blank
+    assign image_class = image_class | append: ' megamenu-item-image__image--loaded'
+  endif
+-%}
+
+<a href="{{ url }}" class="megamenu-item-image">
+  <div class="megamenu-item-image__content">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 800
+        | image_tag:
+          loading: 'lazy',
+          class: image_class,
+          sizes: '(min-width: 750px) 50vw, 100vw',
+          widths: '375, 550, 750, 1100'
+      }}
+    {%- endif -%}
+
+    <div class="megamenu-item-image__text">
+      {%- if title != blank -%}
+        <h3 class="megamenu-item-image__title h2">{{ title }}</h3>
+      {%- endif -%}
+
+      {%- if content != blank -%}
+        <p class="megamenu-item-image__description">{{ content }}</p>
+      {%- endif -%}
+
+      <div class="megamenu-item-image__arrow">
+        {{ 'icon-arrow.svg' | inline_asset_content }}
+      </div>
+    </div>
+  </div>
+</a>

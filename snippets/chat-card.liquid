@@ -1,0 +1,84 @@
+{% comment %}
+  This snippet is used to display a chat card with a portrait, a heading, and two badges. The first badge is a chat badge that opens the chat widget when clicked. The second badge is an email badge that opens the user's email client with the email address pre-filled when clicked.
+
+  To use this snippet, include it in a section or template file. The snippet requires the following variables to be passed in:
+  - image: The URL of the portrait image.
+  - heading: The heading text to display.
+  - content: The content text to display.
+  - first_badge_heading: The heading text for the first badge.
+  - first_badge_content: The content text for the first badge.
+  - second_badge_heading: The heading text for the second badge.
+  - second_badge_content: The content text for the second badge.
+{% endcomment %}
+
+{{ 'component-chat-card.css' | asset_url | stylesheet_tag }}
+
+<div class="chat-card__container">
+  <div class="chat-card__container--header">
+    <div class="chat-card__container--portrait">
+      {% render 'responsive-image', image: image, allow_stretch: true, sizes: '80px' %}
+    </div>
+    <div class="chat-card__container--infos">
+      <div class="h4">{{ heading }}</div>
+      {{ content }}
+    </div>
+  </div>
+  {% if first_badge_heading != blank
+    or first_badge_content != blank
+    or second_badge_heading != blank
+    or second_badge_content != blank
+  %}
+    <div class="chat-card__container--vignettes-container">
+      {% if first_badge_heading != blank or first_badge_content != blank %}
+        <a
+          href="#"
+          onclick="if(window.GorgiasChat){ window.GorgiasChat.open(); } return false;"
+          class="full-unstyled-link"
+        >
+          <div class="chat-card__container--vignette">
+            <div class="chat-card__container--svg-container">
+              {{- 'icon-chat-bubble.svg' | inline_asset_content -}}
+            </div>
+            <div class="chat-card__container--infos">
+              <div class="h5">{{ first_badge_heading }}</div>
+              {{ first_badge_content }}
+            </div>
+            <div class="chat-card__container--arrow-container">
+              {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+            </div>
+          </div>
+        </a>
+      {% endif %}
+      {% if second_badge_heading != blank or second_badge_content != blank %}
+        <a
+          href="mailto:{{ second_badge_heading }}"
+          target="_blank"
+          class="full-unstyled-link"
+        >
+          <div class="chat-card__container--vignette">
+            <div class="chat-card__container--svg-container">
+              {{- 'icon-email.svg' | inline_asset_content -}}
+            </div>
+            <div class="chat-card__container--infos">
+              <div class="h5">{{ second_badge_heading }}</div>
+              {{ second_badge_content }}
+            </div>
+            <div class="chat-card__container--arrow-container">
+              {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+            </div>
+          </div>
+        </a>
+      {% endif %}
+    </div>
+  {% else %}
+    <a
+      href="#"
+      class="chat-card__container--overlay"
+      onclick="if(window.GorgiasChat){ window.GorgiasChat.open(); } return false;"
+    >
+      <div class="chat-card__container--arrow-container">
+        {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+      </div>
+    </a>
+  {% endif %}
+</div>

@@ -1,0 +1,99 @@
+{% comment %}
+  Use this snippet to add a responsive image to page.
+
+  Specify Shopify image you want to make responsive in the "with" parameter (see examples below).
+
+  You can use following variables to customize the image
+  * default_size: size of placeholder image until full image is loaded (default: '150x')
+  * sizes: string of media queries and image size definitions
+  * class: additional classes to be applied to an image
+  * alt: alt text for the image
+  * props: additional properties for the <img /> tag (data-, id, etc.)
+  * styles: additional styles (will go into `style="..."` property)
+  * crop: use crop to specify how the image should be cropped when it's too big
+  * force_height: number of pixels the image should have vertically, without stretching
+  * allow_stretch: allow upscaling the image to fit container (disabled by default)
+  * loading: lazy loading of the image (enabled by default)
+  * adaptive_ratio: aspect ratio of the image (e.g. 56%)
+
+  Usage:
+  {% render 'responsive-image', image:  product.image, class: 'product-image', alt: 'A simple product', default_size: '300x', props: 'data-id="1"' %}
+{% endcomment %}
+
+{%- liquid
+  assign default_size = default_size | default: '550x'
+  assign sizes = sizes | default: '(min-width: 2000px) 1000px, (min-width: 1445px) calc(100vw / 2), (min-width: 1200px) calc(100vw / 1.75), (min-width: 1000px) calc(100vw / 1.5), (min-width: 750px) calc(100vw / 3), 100vw'
+  assign loading = loading | default: 'lazy'
+  assign alt_text = alt | default: image.alt | escape
+  assign preload = preload | default: false
+  assign fetchpriority = ''
+
+  if preload
+    assign fetchpriority = 'high'
+  endif
+
+  capture divStyle
+    if force_height
+      echo 'height: ' | append: force_height | append: 'px; '
+    endif
+    if adaptive_ratio
+      echo 'padding-bottom: ' | append: adaptive_ratio | append: '%;'
+    endif
+  endcapture
+
+  assign focal_point = image.presentation.focal_point
+  assign focal_point_styles = ''
+  if focal_point
+    assign focal_point_styles = 'object-fit:cover;object-position:' | append: focal_point | append: '!important;'
+  endif
+
+  capture img_style
+    unless allow_stretch
+      echo 'max-width: ' | append: image.width | append: 'px; max-height: ' | append: image.height | append: 'px; '
+    endunless
+    if focal_point_styles != ''
+      echo styles | append: ' ' | append: focal_point_styles
+    endif
+  endcapture
+
+  assign widths = widths | default: '550, 750, 1100, 1445, 1680, 2048, 2200, 2890'
+-%}
+
+<div
+  data-preload="{{ preload }}"
+  class="responsive-image-wrapper{% if adaptive_ratio %} responsive-image-wrapper--adaptative-ratio{%endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}"
+  style="{{ divStyle }}"
+>
+  <noscript aria-hidden="true">
+    {{-
+      image
+      | image_url: width: 2000
+      | image_tag:
+        alt: alt_text,
+        loading: loading,
+        width: image.width,
+        height: image.height,
+        style: img_style,
+        sizes: sizes,
+        class: class,
+        widths: widths,
+        fetchpriority: fetchpriority
+    -}}
+  </noscript>
+
+  {{-
+    image
+    | image_url: width: 2000
+    | image_tag:
+      alt: alt_text,
+      loading: loading,
+      width: image.width,
+      height: image.height,
+      style: img_style,
+      sizes: sizes,
+      preload: preload,
+      class: class,
+      widths: widths,
+      fetchpriority: fetchpriority
+  -}}
+</div>

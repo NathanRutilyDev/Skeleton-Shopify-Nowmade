@@ -1,0 +1,77 @@
+{% comment %}
+  Renders a products megamenu.
+  Usage:
+  {% render 'header-megamenu-products', block: block %}
+{% endcomment %}
+
+<div class="mega-menu-products page-width">
+  {% comment %}Première colonne{% endcomment %}
+  <div class="mega-menu__column">
+    <div class="mega-menu__item">
+      {% if block.settings.column_1_links != blank %}
+        <ul class="mega-menu__list">
+          {% for link in block.settings.column_1_links.links %}
+            <li>
+              <a href="{{ link.url }}" class="mega-menu__link h5">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %}Deuxième colonne{% endcomment %}
+  <div class="mega-menu__column">
+    {% liquid
+      if block.settings.column_2_links != blank
+        assign first_link = block.settings.column_2_links.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+    %}
+  </div>
+
+  {% comment %}Troisième colonne{% endcomment %}
+  <div class="mega-menu__column">
+    {% liquid
+      if block.settings.column_3_links != blank
+        assign first_link = block.settings.column_3_links.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+    %}
+  </div>
+
+  {% comment %}Quatrième colonne{% endcomment %}
+  <div class="mega-menu__column">
+    {% liquid
+      if block.settings.column_4_links_1 != blank
+        assign first_link = block.settings.column_4_links_1.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+
+      if block.settings.column_4_links_2 != blank
+        assign first_link = block.settings.column_4_links_2.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+    %}
+  </div>
+
+  {% comment %}Cinquième colonne{% endcomment %}
+  <div class="mega-menu__column">
+    {% liquid
+      if block.settings.column_5_links_1 != blank
+        assign first_link = block.settings.column_5_links_1.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+
+      if block.settings.column_5_links_2 != blank
+        assign first_link = block.settings.column_5_links_2.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+
+      if block.settings.column_5_links_3 != blank
+        assign first_link = block.settings.column_5_links_3.links | first
+        render 'megamenu-item-menu', link: first_link
+      endif
+    %}
+  </div>
+</div>

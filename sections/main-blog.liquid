@@ -1,0 +1,487 @@
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'template-blog.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% assign promo_block = section.blocks | where: 'type', 'promo' %}
+
+<script src="{{ 'filter-accordion.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign current_category = 1
+  assign page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first | split: request.host | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&'
+  if page_url contains '?'
+    assign page_url = page_url | split: '?' | last
+    assign pages_arguments = page_url | split: '&'
+
+    for argument in pages_arguments
+      if argument contains 'category'
+        assign current_category = argument | split: '=' | last
+      endif
+    endfor
+  endif
+-%}
+
+<filter-accordion
+  class="filter-accordion color-{{ section.settings.color_scheme_filters }} gradient"
+  data-blog-url="{{ blog.url }}"
+>
+  <div class="filter-accordion-desktop medium-down-hide">
+    <div class="filter-accordion-desktop__category page-width">
+      {%- liquid
+        assign preoccupations_tags = metaobjects.balise_darticles_de_blog.values | where: 'filtres', 'Préocupation'
+        assign need_tags = metaobjects.balise_darticles_de_blog.values | where: 'filtres', 'Besoin'
+        assign skin_type_tags = metaobjects.balise_darticles_de_blog.values | where: 'filtres', 'Type de peau'
+        assign filters_category = null | default: preoccupations_tags: preoccupations_tags, need_tags: need_tags, skin_type_tags: skin_type_tags
+      -%}
+
+      {% for i in (1..3) %}
+        {%- liquid
+          case i
+            when 1
+              assign heading = 'blogs.filter.preoccupation' | t
+            when 2
+              assign heading = 'blogs.filter.need' | t
+            when 3
+              assign heading = 'blogs.filter.skin_type' | t
+          endcase
+
+          assign heading_handle = heading | handle
+        -%}
+
+        <details
+          data-heading_handle="{{ heading_handle }}"
+          data-current-category="{{ current_category }}"
+          class="filter-accordion__item"
+          aria-expanded="{% if heading_handle == current_category %}true{% else %}false{% endif %}"
+          {% if heading_handle == current_category %}
+            open
+          {% endif %}
+        >
+          <summary>
+            {{ heading }}
+            <span class="svg-wrapper">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+              {{- 'icon-minus.svg' | inline_asset_content -}}
+            </span>
+          </summary>
+          <div class="filter-accordion__content">
+            <div class="loading-overlay gradient hidden"></div>
+            <ul class="page-width">
+              {%- liquid
+                case i
+                  when 1
+                    assign filter_category = preoccupations_tags
+                  when 2
+                    assign filter_category = need_tags
+                  when 3
+                    assign filter_category = skin_type_tags
+                endcase
+              -%}
+              {% for filter in filter_category %}
+                {%- liquid
+                  assign text_contrast = filter.background_color | color_brightness
+
+                  if text_contrast < 50
+                    assign text_color_contrast = 'rgb(var(--color-background))'
+                  else
+                    assign text_color_contrast = 'rgb(var(--color-foreground))'
+                  endif
+
+                  assign downcase_name = filter.name | downcase
+                -%}
+                <li
+                  data-value="{{ filter.name | handle }}"
+                  data-bg="{{ filter.background_color }}"
+                  data-filter
+                  class="filter-accordion__option {% if current_tags contains downcase_name %}selected{% endif %}"
+                  style="
+                    --background-color: {{ filter.background_color }};
+                    --color: {{ text_color_contrast }};
+                    --selected-bg: {{ filter.background_color.value | color_darken: 50 }};
+                  "
+                >
+                  {{ filter.name }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Mobile version -->
+  <div class="filter-accordion-mobile medium-up-hide">
+    <details-modal class="filter-accordion-mobile__modal" data-clone-to-body>
+      <details aria-expanded="false">
+        <summary class="filter-accordion-mobile__toggle">
+          <div class="filter-accordion-mobile__toggle-button">
+            {{- 'icon-bottleneck.svg' | inline_asset_content -}}
+            {{ 'blogs.article.all_articles' | t }}
+          </div>
+        </summary>
+        <div
+          class="filter-accordion-mobile__overlay"
+          id="FilterAccordionMobile"
+          role="dialog"
+          aria-modal="true"
+          aria-label="{{ 'products.details.summary_heading' | t }}"
+        >
+          <div class="loading-overlay gradient"></div>
+          <header class="filter-accordion-mobile__header">
+            <h2>{{ 'blogs.article.all_articles' | t }}</h2>
+            <button
+              type="button"
+              class="filter-accordion-mobile__close link link--text focus-inset"
+              aria-label="{{ 'accessibility.close' | t }}"
+            >
+              <span class="svg-wrapper">
+                {{- 'icon-close.svg' | inline_asset_content -}}
+              </span>
+            </button>
+          </header>
+          <!-- Contenu de l'accordéon : 3 boutons en accordéon -->
+          <div class="filter-accordion-mobile__content">
+            {% for i in (1..3) %}
+              <details class="filter-accordion__item" aria-expanded="false">
+                <summary>
+                  {%- liquid
+                    case i
+                      when 1
+                        echo 'blogs.filter.preoccupation' | t
+                      when 2
+                        echo 'blogs.filter.need' | t
+                      when 3
+                        echo 'blogs.filter.skin_type' | t
+                    endcase
+                  -%}
+                  <span class="svg-wrapper">
+                    {{- 'icon-plus.svg' | inline_asset_content -}}
+                    {{- 'icon-minus.svg' | inline_asset_content -}}
+                  </span>
+                </summary>
+                <div class="filter-accordion__content">
+                  <ul>
+                    {%- liquid
+                      case i
+                        when 1
+                          assign filter_category = preoccupations_tags
+                        when 2
+                          assign filter_category = need_tags
+                        when 3
+                          assign filter_category = skin_type_tags
+                      endcase
+                    -%}
+                    {% for filter in filter_category %}
+                      {%- liquid
+                        assign text_contrast = filter.background_color | color_brightness
+
+                        if text_contrast < 50
+                          assign text_color_contrast = 'rgb(var(--color-background))'
+                        else
+                          assign text_color_contrast = 'rgb(var(--color-foreground))'
+                        endif
+
+                        assign downcase_name = filter.name | downcase
+                      -%}
+                      <li
+                        data-value="{{ filter.name | handle }}"
+                        data-bg="{{ filter.background_color }}"
+                        data-filter
+                        class="filter-accordion__option {% if current_tags contains downcase_name %}selected{% endif %}"
+                        style="
+                          --background-color: {{ filter.background_color }};
+                          --color: {{ text_color_contrast }};
+                          --selected-bg: {{ filter.background_color.value | color_darken: 50 }};
+                        "
+                      >
+                        {{ filter.name }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </details>
+            {% endfor %}
+          </div>
+          <!-- Boutons en bas -->
+          <div class="filter-accordion-mobile__footer">
+            <button
+              class="filter-accordion-mobile__reset font-body-bold uppercase"
+              data-clear
+              aria-role="button"
+            >
+              {{ 'blogs.filter.clear' | t }}
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </button>
+            <button
+              class="filter-accordion-mobile__apply button button--primary font-body-bold uppercase"
+              type="submit"
+              data-apply
+              aria-role="button"
+            >
+              {{ 'blogs.filter.filter' | t }}
+            </button>
+          </div>
+        </div>
+      </details>
+    </details-modal>
+  </div>
+</filter-accordion>
+
+{%- paginate blog.articles by 12 -%}
+  <div class="main-blog page-width color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+    <div class="loading-overlay gradient"></div>
+
+    {%- liquid
+      assign all_filters = '' | split: ','
+      for category in filters_category
+        assign all_filters = all_filters | concat: category[1]
+      endfor
+    -%}
+    <ul class="active-filters" data-filters-active>
+      {%- if current_tags.size > 0 -%}
+        {%- for tag in current_tags -%}
+          {%- for filter in all_filters -%}
+            {%- assign downcase_name = filter.name | downcase -%}
+
+            {%- if downcase_name == tag -%}
+              {%- liquid
+                assign text_contrast = filter.background_color | color_brightness
+
+                if text_contrast < 50
+                  assign text_color_contrast = 'rgb(var(--color-background))'
+                else
+                  assign text_color_contrast = 'rgb(var(--color-foreground))'
+                endif
+
+                assign downcase_name = filter.name | downcase
+              -%}
+              <li
+                class="active-filters__item"
+                data-value="{{ filter.name | handle }}"
+                style="
+                  --background-color: {{ filter.background_color }};
+                  --color: {{ text_color_contrast }};
+                  --selected-bg: {{ filter.background_color.value | color_darken: 50 }};
+                "
+              >
+                {{ filter.name }}
+                <button class="active-filters__remove" data-filter-remove>
+                  {{- 'icon-close.svg' | inline_asset_content -}}
+                </button>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+
+    <div
+      class="blog-grid{% if paginate.current_page == 1 and blog.articles.size < 5 %} low-results{% endif %}{% if blog.articles.size == 0 %} no-results{% endif %}"
+      id="results-grid"
+      data-no-results="{{ 'general.search.no_articles' | t }}"
+    >
+      {%- assign featured_article = blog.articles.first -%}
+
+      {% if blog.articles.size > 0 %}
+        {% if paginate.current_page == 1 and blog.articles.size >= 5 %}
+          <!-- Article principal -->
+          <div class="blog-grid__featured-article article-card">
+            {% render 'card-article', card_article: featured_article, featured: true, show_excerpt: true %}
+          </div>
+
+          <!-- Articles secondaires -->
+          <div class="blog-grid__secondary-articles article-card">
+            {%- for article in blog.articles offset: 1 limit: 4 -%}
+              {% render 'card-article', card_article: article %}
+            {%- endfor -%}
+          </div>
+        {% else %}
+          {%- for article in blog.articles -%}
+            <div class="article-card">
+              {% render 'card-article', card_article: article %}
+            </div>
+          {%- endfor -%}
+        {% endif %}
+
+        <!-- Cartes spécialisées -->
+        <div class="blog-grid__special-cards">
+          {% assign blocks_chat = section.blocks | where: 'type', 'chat' %}
+          {% if blocks_chat.size > 0 %}
+            {% assign block = blocks_chat[0] %}
+            {% render 'chat-card',
+              image: block.settings.image_chat,
+              heading: block.settings.chat_heading,
+              content: block.settings.chat_content,
+              first_badge_heading: block.settings.first_badge_heading,
+              first_badge_content: block.settings.first_badge_content,
+              second_badge_heading: block.settings.second_badge_heading,
+              second_badge_content: block.settings.second_badge_content
+            %}
+          {% endif %}
+
+          {% assign card_promo = metaobjects.card_promo.values | where: 'enabled', true %}
+          {% if card_promo.size > 0 %}
+            {% render 'card-promo', metaobject: card_promo[0], color_scheme: section.settings.card_promo_color_scheme %}
+          {% endif %}
+        </div>
+      {% else %}
+        <p>{{ 'general.search.no_articles' | t }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Bouton "Voir plus d'articles" pour mobile -->
+    {% if paginate.pages > 1 %}
+      <script src="{{ 'load-more.js' | asset_url }}" defer="defer"></script>
+      <div class="load-more-button-wrapper">
+        <load-more-button
+          class="button button--primary"
+          data-current-page="1"
+          data-total-pages="{{ paginate.pages }}"
+          data-next-url="{{ collection.url | append: '?page=2' }}"
+        >
+          {{ 'blogs.article.see_more' | t }}
+          {%- render 'loading-spinner' -%}
+        </load-more-button>
+      </div>
+    {% endif %}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_filters",
+      "label": "Nuanciers de couleur filtrage",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-blog.settings.header.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-blog.settings.paragraph.content"
+    },
+    {
+      "type": "header",
+      "content": "Carte promo"
+    },
+    {
+      "type": "paragraph",
+      "content": "La carte promo est relié à la 1ère entrée active trouvée sur le metaobject 'card_promo'."
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_promo_color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chat",
+      "name": "Chat",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Partie haute"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_chat",
+          "label": "Image de chat"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "chat_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "chat_content",
+          "label": "t:all.Description"
+        },
+        {
+          "type": "header",
+          "content": "Première vignette"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "first_badge_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "first_badge_content",
+          "label": "t:all.Description"
+        },
+        {
+          "type": "header",
+          "content": "Deuxième vignette"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "second_badge_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "second_badge_content",
+          "label": "t:all.Description"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

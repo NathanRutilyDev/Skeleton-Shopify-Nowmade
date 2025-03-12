@@ -1,0 +1,40 @@
+<div class="article-block__product-text">
+  {% if block.settings.heading != blank %}
+    <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  {% if block.settings.text != blank %}
+    <div class="article-block__title-text--content">
+      {{ block.settings.text }}
+    </div>
+  {% endif %}
+  <div class="article-block__product-text--item">
+    {% if block.settings.product != blank %}
+      <div class="article-block__product-text--product">
+        {% render 'card-product',
+          card_product: block.settings.product,
+          media_aspect_ratio: section.settings.image_ratio,
+          image_shape: section.settings.image_shape,
+          show_secondary_image: section.settings.show_secondary_image,
+          show_vendor: section.settings.show_vendor,
+          show_rating: section.settings.show_rating,
+          lazy_load: true,
+          quick_add: section.settings.quick_add,
+          section_id: section.id
+        %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.content_heading != blank or block.settings.content_text != blank %}
+      <div class="article-block__product-text--content">
+        {% if block.settings.content_heading != blank %}
+          <h2 class="article-block__product-text--title">{{ block.settings.content_heading }}</h2>
+        {% endif %}
+        {% if block.settings.content_text != blank %}
+          <div class="article-block__product-text--text">
+            {{ block.settings.content_text }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

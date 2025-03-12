@@ -1,0 +1,148 @@
+.diagnostic-featured-articles {
+  &__container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 3.2rem;
+
+    @include respond-to(md) {
+      gap: 4rem;
+    }
+  }
+
+  h2 {
+    margin-block: 0;
+  }
+
+  &__carousel {
+    width: 100%;
+    padding-bottom: 4rem;
+    overflow: visible;
+  }
+
+  &__slide {
+    max-width: 100%;
+    height: auto;
+    margin-right: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 0.4rem;
+
+    @include respond-to(md) {
+      max-width: calc(33.33% - 70px / 3);
+      margin-right: 16px;
+    }
+
+    .card__inner {
+      --ratio-percent: 62.5% !important;
+
+      img {
+        border-radius: 0.4rem 0.4rem 0 0;
+      }
+    }
+
+    .card__inner .card__media {
+      border-radius: 0;
+    }
+
+    .card:not(.ratio) {
+      gap: 0;
+    }
+
+    .card__content {
+      width: auto;
+      padding: 24px 16px;
+
+      @include respond-to(md) {
+        padding: 24px;
+      }
+    }
+
+    .card__heading.h5 {
+      margin-bottom: 1.6rem;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      line-height: 24px;
+    }
+
+    .article-card__excerpt {
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .card__footer {
+      display: none;
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    position: absolute;
+    z-index: 1;
+    bottom: -16px;
+    left: 0;
+    align-items: center;
+    width: fit-content;
+    transform: translateY(-50%);
+    pointer-events: none;
+    gap: 8px;
+
+    @include respond-to(md) {
+      top: -6.4rem;
+      right: 0;
+      left: initial;
+      padding: 0 -1rem;
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 2.4em;
+    min-width: 2.4rem;
+    height: 2.4rem;
+    min-height: 2.4rem;
+    margin: 0;
+    padding: 0;
+    transform: none;
+    transition: all 0.3s ease;
+    border: none;
+    background: none;
+    color: rgb(var(--color-foreground));
+    cursor: pointer;
+    inset: 0;
+
+    &:hover {
+      transform: translateY(-50%) scale(1.1);
+      background: rgba(var(--color-foreground), 0.06);
+    }
+
+    svg {
+      width: 2.4em;
+      min-width: 2.4rem;
+      height: 2.4rem;
+      min-height: 2.4rem;
+    }
+  }
+
+  .swiper-pagination {
+    position: relative;
+    inset: 0;
+  }
+}

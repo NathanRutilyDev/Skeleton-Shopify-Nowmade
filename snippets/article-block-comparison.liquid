@@ -1,0 +1,84 @@
+{% if block.settings.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+<table class="article-block__comparison-table">
+  <thead>
+    <tr>
+      <th class="article-block__comparison-table--header"></th>
+      <th class="article-block__comparison-table--header article-block__comparison-table--header-our">
+        {{
+          block.settings.col_image_2
+          | image_url: width: 130
+          | image_tag:
+            alt: block.settings.col_image_2.alt,
+            loading: 'lazy',
+            width: block.settings.col_image_2.width,
+            height: block.settings.col_image_2.height,
+            class: 'article-block__comparison-table--image'
+        }}
+        <div class="article-block__comparison-table--title h6">{{ block.settings.col_heading_2 }}</div>
+      </th>
+      <th class="article-block__comparison-table--header">
+        {{
+          block.settings.col_image_3
+          | image_url: width: 130
+          | image_tag:
+            alt: block.settings.col_image_3.alt,
+            loading: 'lazy',
+            width: block.settings.col_image_3.width,
+            height: block.settings.col_image_3.height,
+            class: 'article-block__comparison-table--image'
+        }}
+        <div class="article-block__comparison-table--title h6">{{ block.settings.col_heading_3 }}</div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% liquid
+      assign col_list_1 = block.settings.col_list_1.value
+      assign col_list_2 = block.settings.col_list_2.value
+      assign col_list_3 = block.settings.col_list_3.value
+
+      assign rows = col_list_1.size | minus: 1
+    %}
+
+    {% for index in (0..rows) %}
+      <tr class="article-block__comparison-table--row">
+        <td class="article-block__comparison-table--cell article-block__comparison-table--cell-label">
+          {{ col_list_1[index] }}
+        </td>
+        <td class="article-block__comparison-table--cell article-block__comparison-table--cell-our">
+          {% if col_list_2[index] == 'check' %}
+            <div class="article-block__comparison-table--icon article-block__comparison-table--icon-check">
+              {{ 'icon-checkmark.svg' | inline_asset_content }}
+            </div>
+          {% elsif col_list_2[index] == 'croix' %}
+            <div class="article-block__comparison-table--icon article-block__comparison-table--icon-cross">
+              {{ 'icon-close.svg' | inline_asset_content }}
+            </div>
+          {% else %}
+            {{ col_list_2[index] }}
+          {% endif %}
+        </td>
+        <td class="article-block__comparison-table--cell">
+          {% if col_list_3[index] == 'check' %}
+            <div class="article-block__comparison-table--icon article-block__comparison-table--icon-check">
+              {{ 'icon-checkmark.svg' | inline_asset_content }}
+            </div>
+          {% elsif col_list_3[index] == 'croix' %}
+            <div class="article-block__comparison-table--icon article-block__comparison-table--icon-cross">
+              {{ 'icon-close.svg' | inline_asset_content }}
+            </div>
+          {% else %}
+            {{ col_list_3[index] }}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

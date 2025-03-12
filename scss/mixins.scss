@@ -1,0 +1,42 @@
+@use "sass:map";
+
+$breakpoints: (
+  sm: 500px,
+  md: 768px,
+  ml: 980px,
+  l: 1080px,
+  xl: 1200px,
+  xxl: 1440px,
+  wide: 1600px,
+);
+
+// Mixin for media queries
+@mixin respond-to($breakpoint, $max-breakpoint: null) {
+  $min-value: map.get($breakpoints, $breakpoint);
+  $max-value: if($max-breakpoint, map.get($breakpoints, $max-breakpoint), null);
+
+  /* Handle min-width only */
+  @if $min-value and $max-value == null {
+    @media (min-width: #{$min-value}) {
+      @content;
+    }
+  }
+
+  /* Handle min-width and max-width (range) */
+  @else if $min-value and $max-value {
+    @media (min-width: #{$min-value}) and (max-width: #{$max-value - 1}) {
+      @content;
+    }
+  }
+
+  /* Handle max-width */
+  @else if $min-value == null and $max-value {
+    @media (max-width: #{$max-value - 1}) {
+      @content;
+    }
+  }
+  /* Throw error if breakpoint is invalid */
+  @else {
+    @error "Breakpoint '#{$breakpoint}' or '#{$max-breakpoint}' is not defined in $breakpoints.";
+  }
+}

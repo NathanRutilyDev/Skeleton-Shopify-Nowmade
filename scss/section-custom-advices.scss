@@ -1,0 +1,160 @@
+.custom-advices {
+  .page-width {
+    padding: 40px 16px;
+
+    @include respond-to(md) {
+      padding: 64px;
+    }
+  }
+
+  h2 {
+    margin-bottom: 24px;
+    text-align: center;
+
+    @include respond-to(md) {
+      text-align: left;
+    }
+  }
+
+  &__cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include respond-to(md) {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 4px;
+    background: #fff;
+
+    @include respond-to(md) {
+      flex: 1 1 calc(33.333% - 24px);
+    }
+
+    &:nth-of-type(n + 3) {
+      display: none;
+
+      @include respond-to(md) {
+        display: flex;
+      }
+    }
+
+    &:hover {
+      .custom-advices__card--arrow {
+        transform: translateX(6px);
+      }
+    }
+
+    &--image {
+      display: none;
+
+      @include respond-to(md) {
+        display: block;
+        height: 250px;
+        overflow: hidden;
+
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    &--text {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 24px;
+      gap: 16px;
+
+      @include respond-to(md) {
+        flex-direction: row;
+      }
+
+      h3,
+      p {
+        width: 100%;
+
+        @include respond-to(md) {
+          width: auto;
+        }
+      }
+    }
+
+    &--header {
+      display: flex;
+      flex-wrap: wrap;
+      order: 1;
+      width: 100%;
+      gap: 8px;
+
+      @include respond-to(md) {
+        flex-direction: column;
+        align-items: flex-start;
+        order: 0;
+        gap: 16px;
+      }
+
+      h3 {
+        margin: 0px;
+        font-family: Raleway, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.24px;
+        line-height: 32px;
+      }
+    }
+
+    &--icons {
+      display: flex;
+      justify-content: space-between;
+      order: 0;
+    }
+
+    &--svg {
+      display: flex;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: #fbeee0;
+
+      @include respond-to(md) {
+        display: none;
+      }
+
+      svg {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    &--arrow {
+      display: flex;
+      padding: 8px;
+      transition: transform 0.3s ease-in-out;
+
+      @include respond-to(md) {
+        padding: 0;
+      }
+
+      svg {
+        width: 32px;
+        height: 32px;
+        color: var(--Main-Brown, #443d36);
+      }
+    }
+
+    .text-body p {
+      margin: 0;
+    }
+  }
+}

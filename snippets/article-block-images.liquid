@@ -1,0 +1,44 @@
+{% if block.settings.heading != blank %}
+  <h2 class="article-block__title-text--heading">{{ block.settings.heading }}</h2>
+{% endif %}
+{% if block.settings.text != blank %}
+  <div class="article-block__title-text--content rte">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
+
+<div class="article-block__images {% if block.settings.image_2 != blank %}article-block__images--double{% endif %}">
+  {% if block.settings.image_1 != blank %}
+    <div class="article-block__images--media">
+      {% if block.settings.image_1_url != blank %}
+        <a href="{{ block.settings.image_1_url }}" target="_blank">
+      {% endif %}
+      {%- render 'responsive-image',
+        image: block.settings.image_1,
+        adaptive_ratio: block.settings.image_1_ratio,
+        sizes: '(min-width: 1200px) 50vw, 100vw',
+        class: 'article-block__images--image'
+      -%}
+      {% if block.settings.image_1_url != blank %}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if block.settings.image_2 != blank %}
+    <div class="article-block__images--media">
+      {% if block.settings.image_2_url != blank %}
+        <a href="{{ block.settings.image_2_url }}" target="_blank">
+      {% endif %}
+      {%- render 'responsive-image',
+        image: block.settings.image_2,
+        adaptive_ratio: block.settings.image_2_ratio,
+        sizes: '(min-width: 1200px) 50vw, 100vw',
+        class: 'article-block__images--image'
+      -%}
+      {% if block.settings.image_2_url != blank %}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

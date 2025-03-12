@@ -1,0 +1,516 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'section-collection-parent-list.css' | asset_url | stylesheet_tag }}
+
+{% if settings.animations_reveal_on_scroll %}
+  {% assign animation_index = 0 %}
+{% endif %}
+
+{% unless section.settings['content-position'] == 'below-image' %}
+  {% assign stretch_img = true %}
+  <style>
+    .section--{{ section.id }} .homepage-collection-grid-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    .section--{{ section.id }} .homepage-collection-grid-inner .grid-image,
+    .section--{{ section.id }} .homepage-collection-grid-inner .grid-item-details--hover,
+    .section--{{ section.id }} .homepage-collection-grid-inner .grid-item-details--overlay {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .section--{{ section.id }} .homepage-collection-grid-inner .responsive-image-wrapper,
+    .section--{{ section.id }} .homepage-collection-grid-inner .responsive-image-wrapper img {
+        height: 100%;
+    }
+  </style>
+{% else %}
+  {% assign stretch_img = false %}
+{% endunless %}
+
+{% if section.settings['remove-spacing'] and section.settings['section-width'] == 'full' %}
+  {% assign no-spacing = ' no-spacing' %}
+{% else %}
+  {% assign no-spacing = '' %}
+{% endif %}
+
+{% if section.settings.override_button_colors %}
+  {%
+    render 'button-color-overrides' with
+    id: section.id,
+    style: section.settings.buttons_style,
+    text_color: section.settings.button_text_color,
+    background_color: section.settings.button_background_color
+  %}
+{% endif %}
+
+<div
+  class="page-width color-scheme--{{ section.settings.colors }}{{ no-spacing }}"
+>
+  <div class="homepage-collections-background{% if section.settings.section-width == 'content' %} width--content{% endif %}">
+    {% comment %} Section title and description {% endcomment %}
+    {% if settings.enable_animation %}
+      <div
+        class="scroll-trigger animate--slide-in"
+        data-cascade
+        style="--animation-order: {{ animation_index }};"
+        {% assign animation_index = animation_index | plus: 1 %}
+      >
+    {% endif %}
+    {% render 'dynamic-section-header' with section_title: section.settings.title, section_description: section.settings.description %}
+    {% if settings.enable_animation %}
+      </div>
+    {% endif %}
+
+    <div class="collection-parent-grid">
+      <swiper-slider class="swiper">
+        <script type="application/json">
+          {
+            "allowTouchMove": true,
+            "draggable": true,
+            "slidesPerView": "auto",
+            "pagination": {
+              "type": "bullets",
+              "el": ".swiper-pagination",
+              "clickable": true,
+              "dynamicBullets": true,
+              "dynamicMainBullets": 3
+            },
+            "navigation": {
+              "nextEl": ".swiper-button-next",
+              "prevEl": ".swiper-button-prev"
+            }
+          }
+        </script>
+
+        <div class="swiper-wrapper collection-grid">
+          {% for block in section.blocks %}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+            {% if collection == empty %}
+              {% comment %}add default state for collection block in storefront editor{% endcomment %}
+              {% capture collection_title %}{{ 'general.onboarding.collection_title' | t }}{% endcapture %}
+            {% else %}
+              {% capture collection_title %}{{ collection.title }}{% endcapture %}
+            {% endif %}
+
+            <div
+              class="swiper-slide homepage-collection-grid-item homepage-collection-grid-item--{{ section.settings.content-position }} block-section--{{ block.id }} {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ animation_index }};"
+                {% assign animation_index = animation_index | plus: 1 %}
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              <style>
+                .section--{{ section.id }} .block-section--{{ block.id }} .grid-item-details--background-gradient,
+                .section--{{ section.id }} .block-section--{{ block.id }} .hover-outer .hover-inner::before {
+                  background: -webkit-linear-gradient(top, {{ block.settings.overlay_color | color_modify: 'alpha', 0.3 }} 0%, {{ block.settings.overlay_color | color_modify: 'alpha', 0.8 }} 75%);
+                  background: linear-gradient(to bottom, {{ block.settings.overlay_color | color_modify: 'alpha', 0.3 }} 0%, {{ block.settings.overlay_color | color_modify: 'alpha', 0.8 }} 75%);
+                }
+
+                {% unless section.settings.content-position == 'below-image' %}
+                  .section--{{ section.id }} .block-section--{{ block.id }} .grid-item__subheading,
+                  .section--{{ section.id }} .block-section--{{ block.id }} .grid-item__title {
+                    color: {{ block.settings.overlay_font_color }} !important;
+                  }
+                {% endunless %}
+              </style>
+              <div class="homepage-collection-grid-inner">
+                <div class="grid-image">
+                  {% if block.settings.collection != blank and section.settings['content-position'] == 'below-image' %}
+                    <a href="{{ collection.url }}" class="grid-image--centered" tabindex="-1" title="">
+                  {% endif %}
+
+                  {% if collection == empty %}
+                    {% if block.settings.collection_img %}
+                      {% render 'responsive-image',
+                        image: block.settings.collection_img,
+                        class: class,
+                        allow_stretch: stretch_img
+                      %}
+                    {% else %}
+                      {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                      {% assign svg_placeholder_classes = 'icon icon--placeholder' %}
+                      {% unless section.settings['content-position'] == 'below-image' %}
+                        {% assign svg_placeholder_classes = svg_placeholder_classes
+                          | append: ' icon--placeholder--subdued'
+                        %}
+                      {% endunless %}
+                      {{ 'collection-' | append: current | placeholder_svg_tag: svg_placeholder_classes }}
+                    {% endif %}
+                  {% else %}
+                    {% if block.settings.collection_img %}
+                      {% assign image = block.settings.collection_img %}
+                    {% elsif collection.image %}
+                      {% assign image = collection.image %}
+                    {% elsif collection.products.size > 0 %}
+                      {% assign product = collection.products | first %}
+                      {% assign image = product.media[0].preview_image %}
+                    {% else %}
+                      {% assign image = null %}
+                    {% endif %}
+
+                    {% if section.blocks.size == 1 %}
+                      {% assign class = 'homepage-collection-grid-image-single' %}
+                    {% else %}
+                      {% assign class = '' %}
+                    {% endif %}
+
+                    {% render 'responsive-image', image: image, class: class, allow_stretch: stretch_img %}
+                  {% endif %}
+
+                  {% if block.settings.collection != blank and section.settings['content-position'] == 'below-image' %}
+                    </a>
+                  {% endif %}
+                </div>
+
+                <div
+                  class="grid-item-details--{{ section.settings.content-position }}{% if block.settings.show-gradient-overlay and section.settings.content-position != 'below-image' %} grid-item-details--background-gradient{% endif %}"
+                  {% unless section.settings['content-position'] == 'below-image' %}
+                    style="position:relative;"
+                  {% endunless %}
+                >
+                  {% if section.settings['content-position'] != 'below-image'
+                    and block.settings['overlay-btn-text'] == blank
+                    and block.settings.collection != blank
+                  %}
+                    <a href="{{ collection.url }}" class="full-unstyled-link" tabindex="-1" style="width: 100%;">
+                  {% endif %}
+
+                  <div class="grid-item__content">
+                    {% if block.settings.subheading != blank %}
+                      {% if section.settings['content-position'] == 'below-image'
+                        and block.settings.collection != blank
+                      %}
+                        <a href="{{ collection.url }}" class="grid-item__subheading full-unstyled-link" tabindex="-1">
+                      {% endif %}
+                      <div class="grid-item__subheading">{{ block.settings.subheading }}</div>
+                      {% if section.settings['content-position'] == 'below-image'
+                        and block.settings.collection != blank
+                      %}
+                        </a>
+                      {% endif %}
+                    {% endif %}
+
+                    {% if section.settings['content-position'] == 'below-image'
+                      and block.settings.collection != blank
+                    %}
+                      <a href="{{ collection.url }}" class="full-unstyled-link" tabindex="-1">
+                    {% endif %}
+                    <h3 class="grid-item__title">{{ collection_title }}</h3>
+                    {% if section.settings['content-position'] == 'below-image'
+                      and block.settings.collection != blank
+                    %}
+                      </a>
+                    {% endif %}
+
+                    {% if block.settings['overlay-btn-text'] != blank %}
+                      {%
+                        render 'dynamic-section-button' with
+                        id: section.id,
+                        link: collection.url,
+                        label: block.settings.overlay-btn-text,
+                        style: section.settings.buttons_style,
+                        a_classes: 'homepage-featured-box-btn'
+                      %}
+                    {% endif %}
+                  </div>
+
+                  {% if section.settings['content-position'] != 'below-image'
+                    and block.settings['overlay-btn-text'] == blank
+                    and block.settings.collection != blank
+                  %}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          {% if section.blocks.size == 0 %}
+            <div class="placeholder-noblocks">
+              {{ 'general.onboarding.no_content' | t }}
+            </div>
+          {% else %}
+            {% if section.settings.pack_image %}
+              <div
+                class="swiper-slide collection-pack-slide homepage-collection-grid-item large-up-hide homepage-collection-grid-item--{{ section.settings.content-position }} block-section--{{ block.id }} {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: {{ animation_index }};"
+                  {% assign animation_index = animation_index | plus: 1 %}
+                {% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <style>
+                  .section--{{ section.id }} .block-section--{{ block.id }} .grid-item-details--background-gradient,
+                  .section--{{ section.id }} .block-section--{{ block.id }} .hover-outer .hover-inner::before {
+                    background: -webkit-linear-gradient(top, {{ block.settings.overlay_color | color_modify: 'alpha', 0.3 }} 0%, {{ block.settings.overlay_color | color_modify: 'alpha', 0.8 }} 75%);
+                    background: linear-gradient(to bottom, {{ block.settings.overlay_color | color_modify: 'alpha', 0.3 }} 0%, {{ block.settings.overlay_color | color_modify: 'alpha', 0.8 }} 75%);
+                  }
+
+                  {% unless section.settings.content-position == 'below-image' %}
+                    .section--{{ section.id }} .block-section--{{ block.id }} .grid-item__subheading,
+                    .section--{{ section.id }} .block-section--{{ block.id }} .grid-item__title {
+                      color: {{ block.settings.overlay_font_color }} !important;
+                    }
+                  {% endunless %}
+                </style>
+                <div class="homepage-collection-grid-inner">
+                  <div class="grid-image">
+                    {% if section.settings.pack_url != blank
+                      and section.settings['content-position'] == 'below-image'
+                    %}
+                      <a href="{{ section.settings.pack_url }}" class="grid-image--centered" tabindex="-1" title="">
+                    {% endif %}
+                    {% render 'responsive-image', image: section.settings.pack_image, allow_stretch: stretch_img %}
+
+                    {% if section.settings.pack_promo != blank %}
+                      <div
+                        class="collection-parent-pack__promo"
+                        style="--color-title: {{ section.settings.pack_title_color }}; "
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="81" viewBox="0 0 80 81" fill="none">
+                          <path d="M68.4086 12.3375L40.1762 0.497559L11.8404 12.0884L0 40.3214L11.5909 68.6571L39.8238 80.4976L68.1596 68.9062L80 40.6737L68.4086 12.3375Z" fill="#847465"/>
+                        </svg>
+                        <span>{{ section.settings.pack_promo }}</span>
+                      </div>
+                    {% endif %}
+                    {% if section.settings.pack_url != blank
+                      and section.settings['content-position'] == 'below-image'
+                    %}
+                      </a>
+                    {% endif %}
+                  </div>
+
+                  <div
+                    class="grid-item-details--{{ section.settings.content-position }}{% if block.settings.show-gradient-overlay and section.settings.content-position != 'below-image' %} grid-item-details--background-gradient{% endif %}"
+                    {% unless section.settings['content-position'] == 'below-image' %}
+                      style="position:relative;"
+                    {% endunless %}
+                  >
+                    {% if section.settings['content-position'] != 'below-image'
+                      and section.settings.pack_title != blank
+                    %}
+                      <a href="{{ collection.url }}" class="full-unstyled-link" tabindex="-1" style="width: 100%;">
+                    {% endif %}
+
+                    <div class="grid-item__content">
+                      <h3 class="grid-item__title">{{ section.settings.pack_title }}</h3>
+                    </div>
+
+                    {% if section.settings['content-position'] != 'below-image'
+                      and block.settings.collection != blank
+                    %}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <div class="swiper-pagination"></div>
+
+        <div class="swiper-button-prev">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+        <div class="swiper-button-next">
+          {{ 'icon-chevron-left.svg' | inline_asset_content }}
+        </div>
+      </swiper-slider>
+
+      {% if section.settings.pack_image %}
+        <a
+          href="{{ section.settings.pack_url }}"
+          class="collection-parent-pack medium-down-hide full-unstyled-link {%- if settings.enable_animation %} scroll-trigger animate--slide-in{% endif %}"
+          {% if settings.enable_animation %}
+            data-cascade
+            style="animation-order: {{ animation_index }};"
+            {% assign animation_index = animation_index | plus: 1 %}
+          {% endif %}
+        >
+          {{
+            section.settings.pack_image
+            | image_url: width: 640
+            | image_tag:
+              loading: 'lazy',
+              widths: '120, 240, 360, 480, 640',
+              width: section.settings.pack_image.width,
+              height: section.settings.pack_image.height,
+              alt: section.settings.pack_title
+          }}
+          <div class="collection-parent-pack-content" style="--color-title: {{ section.settings.pack_title_color }}; ">
+            {% if section.settings.pack_title != blank %}
+              <p class="collection-parent-pack__title h3">
+                {{ section.settings.pack_title }}
+              </p>
+            {% endif %}
+            {% if section.settings.pack_promo != blank %}
+              <div class="collection-parent-pack__promo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="81" viewBox="0 0 80 81" fill="none">
+                  <path d="M68.4086 12.3375L40.1762 0.497559L11.8404 12.0884L0 40.3214L11.5909 68.6571L39.8238 80.4976L68.1596 68.9062L80 40.6737L68.4086 12.3375Z" fill="#847465"/>
+                </svg>
+                <span>{{ section.settings.pack_promo }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections enfants",
+  "class": "featured-collections-wrapper show-on-scroll featured-child-collections",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:all.Heading",
+      "default": "Featured Collections"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:all.Description"
+    },
+    {
+      "type": "select",
+      "id": "content-position",
+      "label": "Position du contenu",
+      "default": "overlay",
+      "options": [
+        {
+          "value": "hover",
+          "label": "t:all.On_hover"
+        },
+        {
+          "value": "overlay",
+          "label": "t:all.Overlay"
+        },
+        {
+          "value": "below-image",
+          "label": "t:all.Below_image"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:all.Color"
+    },
+    {
+      "type": "color_scheme",
+      "id": "colors",
+      "label": "t:all.Color_scheme"
+    },
+    {
+      "type": "header",
+      "content": "Contenu du pack"
+    },
+    {
+      "type": "image_picker",
+      "id": "pack_image",
+      "label": "Image du pack"
+    },
+    {
+      "type": "text",
+      "id": "pack_title",
+      "label": "Titre du pack",
+      "default": "Créez votre pack"
+    },
+    {
+      "type": "url",
+      "id": "pack_url",
+      "label": "Url du pack"
+    },
+    {
+      "type": "text",
+      "id": "pack_promo",
+      "label": "Promo du pack",
+      "default": "-10%"
+    },
+    {
+      "type": "color",
+      "id": "pack_title_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "t:all.Collection",
+      "settings": [
+        {
+          "label": "t:all.Collection",
+          "id": "collection",
+          "type": "collection"
+        },
+        {
+          "id": "collection_img",
+          "type": "image_picker",
+          "label": "t:all.Image_Optional"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "t:all.Subheading",
+          "default": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "overlay-btn-text",
+          "label": "t:all.Button_text",
+          "default": "Shop now"
+        },
+        {
+          "type": "checkbox",
+          "id": "show-gradient-overlay",
+          "default": false,
+          "label": "t:all.Enable_overlay_gradient"
+        },
+        {
+          "type": "color",
+          "id": "overlay_font_color",
+          "label": "t:all.Overlay_text_color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "t:all.Overlay_color",
+          "default": "#242424"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Liste de collections enfants",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["404", "article", "blog", "cart", "collection", "index", "page", "password", "product", "search"]
+  }
+}
+{% endschema %}

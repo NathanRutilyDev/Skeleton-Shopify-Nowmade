@@ -1,0 +1,197 @@
+.product-featured-benefits__container {
+  padding: 4rem 1.6rem;
+  text-align: center;
+  text-wrap: balance;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .product-featured-benefits__container {
+    padding: 6.4rem;
+  }
+}
+.product-featured-benefits__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 2rem;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .product-featured-benefits__wrapper {
+    gap: 3rem;
+  }
+}
+.product-featured-benefits__heading {
+  max-width: 800px;
+  margin: 0;
+  font-weight: 400;
+}
+.product-featured-benefits__grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2.4rem 1.6rem;
+  width: 100%;
+  max-width: 800px;
+  /* Handle min-width only */
+}
+@media (min-width: 1080px) {
+  .product-featured-benefits__grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    gap: 4rem;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
+  }
+}
+.product-featured-benefits__column {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2.4rem;
+  text-align: left;
+  /* Handle min-width only */
+}
+.product-featured-benefits__column--left {
+  grid-column: 1/span 1;
+  grid-row: 1/span 1;
+}
+.product-featured-benefits__column--left {
+  grid-column: 1/span 1;
+  grid-row: 2/span 1;
+}
+@media (min-width: 1080px) {
+  .product-featured-benefits__column {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+  }
+  .product-featured-benefits__column--left {
+    padding-top: 64px;
+  }
+  .product-featured-benefits__column--right {
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+    padding-bottom: 64px;
+  }
+}
+.product-featured-benefits__image {
+  position: relative;
+  grid-column: 2/span 1;
+  grid-row: 1/span 2;
+  max-width: 130px;
+  max-height: 260px;
+  margin: 0 auto;
+  /* Handle min-width only */
+}
+@media (min-width: 1080px) {
+  .product-featured-benefits__image {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 0;
+            flex: 1 0;
+    max-width: 190px;
+    max-height: 400px;
+    margin: 0;
+  }
+}
+.product-featured-benefits__image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
+  /* Handle min-width only */
+}
+@media (min-width: 1080px) {
+  .product-featured-benefits__image img {
+    height: 100%;
+  }
+}
+.product-featured-benefits__item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1.6rem;
+}
+.product-featured-benefits__icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 56px;
+  min-width: 56px;
+  height: 56px;
+  padding: 0.8rem;
+  border-radius: 50%;
+  background: rgb(var(--color-background-contrast));
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .product-featured-benefits__icon {
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
+  }
+}
+.product-featured-benefits__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.product-featured-benefits__icon img {
+  width: 40px;
+  height: 40px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.product-featured-benefits__text {
+  margin: 0;
+  color: var(--color-foreground);
+  font-family: Raleway;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.14px;
+  line-height: 20px;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .product-featured-benefits__text {
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    line-height: 32px;
+    text-transform: capitalize;
+  }
+}
+.product-featured-benefits__tagline {
+  max-width: 800px;
+  margin: 0;
+  text-align: center;
+}
+.product-featured-benefits--full-width .product-featured-benefits__wrapper {
+  padding-right: 0;
+  padding-left: 0;
+}

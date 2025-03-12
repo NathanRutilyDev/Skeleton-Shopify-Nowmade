@@ -1,0 +1,421 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+{%- unless product.has_only_default_variant -%}
+  {%- liquid
+    # Find featured variant
+    assign featured_variant = null
+    for variant in product.variants
+      if variant.metafields.data.featured
+        assign featured_variant = variant
+        break
+      endif
+    endfor
+
+    # If no featured variant found, use first available
+    unless featured_variant
+      assign featured_variant = product.first_available_variant
+    endunless
+
+    # Use selected variant if present, otherwise use featured variant
+    assign checked_variant = product.selected_variant | default: featured_variant
+
+    # Get the selected option values from the checked variant
+    assign selected_values = checked_variant.options
+  -%}
+
+  <variant-selects
+    id="variant-selects-{{ section.id }}"
+    data-section="{{ section.id }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign swatch_count = option.values | map: 'swatch' | compact | size
+        assign picker_type = block.settings.picker_type
+
+        if swatch_count > 0 and block.settings.swatch_shape != 'none'
+          if block.settings.picker_type == 'dropdown'
+            assign picker_type = 'swatch_dropdown'
+          else
+            assign picker_type = 'swatch'
+          endif
+        endif
+
+        # Count available values for this option
+        assign value_count = option.values | size
+
+        # Get option position for array access
+        assign option_index = option.position | minus: 1
+
+        # Get the selected value for this option from the checked variant
+        assign selected_value = selected_values[option_index]
+      -%}
+
+      {%- if picker_type == 'swatch' -%}
+        <fieldset class="js product-form__input product-form__input--swatch">
+          {% if product.options_with_values.size > 1 %}
+            <legend class="form__label">
+              {{ option.name }}:
+              <span data-selected-value>
+                {{- selected_value -}}
+              </span>
+            </legend>
+          {% endif %}
+          {% render 'product-variant-options',
+            product: product,
+            option: option,
+            block: block,
+            picker_type: picker_type
+          %}
+        </fieldset>
+
+      {%- elsif picker_type == 'button' -%}
+        <fieldset class="js product-form__input product-form__input--pill">
+          {% if product.options_with_values.size > 1 %}
+            <legend class="form__label text-body font-body-bold">{{ option.name }}</legend>
+          {% endif %}
+
+          {% if value_count >= 5 %}
+            <details-modal
+              class="variant-picker-container js-variant-picker"
+              data-breakpoint-max="768"
+              data-clone-to-body
+            >
+              <details>
+                <summary class="variant-picker-container__selected-variant{% if option_disabled %} disabled{% endif %}">
+                  <div class="variant-picker-container__selected-variant--header">
+                    <span class="variant-picker-container__selected-variant--title" data-selected-value>
+                      {{- selected_value -}}
+                    </span>
+                    <span class="variant-picker-container__selected-variant--price">
+                      {%- for variant in product.variants -%}
+                        {%- if variant.options[option_index] == selected_value -%}
+                          {%- if variant.compare_at_price > variant.price -%}
+                            <s>{{ variant.compare_at_price | money }}</s>
+                          {%- endif -%}
+                          <span>{{ variant.price | money }}</span>
+                          {%- if variant.metafields.data.reduction != blank
+                            or variant.compare_at_price > variant.price
+                          -%}
+                            <span class="badge badge--sale font-body-bold uppercase">
+                              {%- liquid
+                                if variant.metafields.data.reduction != blank
+                                  assign reduction = variant.metafields.data.reduction | prepend: '-' | append: '%'
+                                else
+                                  assign reduction = variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | round | prepend: '-' | append: '%'
+                                endif
+                                echo 'products.product.reduction' | t: reduction: reduction
+                              -%}
+                            </span>
+                          {%- endif -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </span>
+                  </div>
+                  <span class="svg-wrapper">
+                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                  </span>
+                </summary>
+
+                <div
+                  class="variant-picker-container__modal-body color-scheme-1"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="{{ 'products.product.select_variant' | t }}"
+                >
+                  <div class="modal-overlay medium-up-hide"></div>
+                  <div class="variant-picker-container__modal-body--content" tabindex="-1">
+                    <div class="variant-picker-container__modal-body--header medium-up-hide">
+                      <span class="variant-picker-container__modal-header--title h3">
+                        {{- 'products.product.select_variant' | t -}}
+                      </span>
+                      <button
+                        type="button"
+                        class="card__details-close modal__close-button link link--text focus-inset"
+                        aria-label="{{ 'accessibility.close' | t }}"
+                      >
+                        <span class="svg-wrapper">
+                          {{- 'icon-close.svg' | inline_asset_content -}}
+                        </span>
+                      </button>
+                    </div>
+                    <div class="variant-picker-container__modal-body--options">
+                      {%- for value in option.values -%}
+                        {%- liquid
+                          # Find the variant for this option value
+                          assign current_variant = null
+                          for variant in product.variants
+                            if variant.options[option_index] == value
+                              assign current_variant = variant
+                              break
+                            endif
+                          endfor
+                          assign option_disabled = true
+                          if value.available
+                            assign option_disabled = false
+                          endif
+                        -%}
+                        <label
+                          class="variant-picker-container__modal-body--option{% if value == selected_value %} variant-picker-container__modal-body--option-selected{% endif %}{% if option_disabled %} disabled{% endif %}"
+                        >
+                          <input
+                            type="radio"
+                            id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            name="options[{{ option.name | escape }}]"
+                            value="{{ value | escape }}"
+                            form="{{ product_form_id }}"
+                            {% if value == selected_value %}
+                              checked
+                            {% endif %}
+                            {% if option_disabled %}
+                              class="disabled"
+                            {% endif %}
+                            data-option-value-id="{{ value.id }}"
+                          >
+                          <span class="variant-picker-container__modal-body--option-title">{{ value }}</span>
+                          {%- if current_variant != blank -%}
+                            <span class="variant-picker-container__modal-body--option-price">
+                              {%- if current_variant.compare_at_price > current_variant.price -%}
+                                <s>{{ current_variant.compare_at_price | money }}</s>
+                              {%- endif -%}
+                              <span>{{ current_variant.price | money }}</span>
+                              {%- if current_variant.metafields.data.reduction != blank
+                                or current_variant.compare_at_price > current_variant.price
+                              -%}
+                                <span class="badge badge--sale font-body-bold uppercase">
+                                  {%- liquid
+                                    if current_variant.metafields.data.reduction != blank
+                                      assign reduction = current_variant.metafields.data.reduction | prepend: '-' | append: '%'
+                                    else
+                                      assign reduction = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round | prepend: '-' | append: '%'
+                                    endif
+                                    echo 'products.product.reduction' | t: reduction: reduction
+                                  -%}
+                                </span>
+                              {%- endif -%}
+                            </span>
+                          {%- endif -%}
+                        </label>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </details-modal>
+          {% else %}
+            <div class="variant-grid variant-grid--{{ value_count }}">
+              {%- # First render featured value if we have 3 variants -%}
+              {%- if value_count == 3 and featured_variant != blank -%}
+                {%- assign featured_value = featured_variant.options[option_index] -%}
+                <label
+                  for="{{ section.id }}-{{ option.position }}-{{ featured_value | handleize }}"
+                  class="variant-grid__item variant-grid__item--featured{% if featured_value == selected_value %} variant-grid__item--selected{% endif %}{% if option_disabled %} disabled{% endif %}"
+                >
+                  <input
+                    type="radio"
+                    id="{{ section.id }}-{{ option.position }}-{{ featured_value | handleize }}"
+                    name="options[{{ option.name | escape }}]"
+                    value="{{ featured_value | escape }}"
+                    form="{{ product_form_id }}"
+                    {% if featured_value == selected_value %}
+                      checked
+                    {% endif %}
+                    data-option-value-id="{{ featured_value.id }}"
+                  >
+                  <span class="variant-grid__content">
+                    <span class="variant-grid__title font-body-bold text-sm">{{ featured_value }}</span>
+                    <span class="variant-grid__price font-body-bold">
+                      {%- if featured_variant.compare_at_price > featured_variant.price -%}
+                        <s>{{ featured_variant.compare_at_price | money }}</s>
+                      {%- endif -%}
+                      <span>{{ featured_variant.price | money }}</span>
+                    </span>
+                    {%- if current_variant.metafields.data.duration != blank
+                      or current_variant.metafields.data.volume != blank
+                    %}
+                      <span class="variant-grid__usage font-body-bold">
+                        <span>{{ 'products.product.usage' | t }}</span>
+                        <span>
+                          {%- liquid
+                            if current_variant.metafields.data.duration != blank
+                              echo current_variant.metafields.data.duration
+                            else
+                              assign volume = current_variant.metafields.data.volume.value.value | round
+                              assign translation = 'products.usage.' | append: volume | append: 'mL'
+                              echo translation | t
+                            endif
+                          -%}
+                        </span>
+                      </span>
+                    {% endif %}
+                    {%- if featured_variant.metafields.data.reduction != blank
+                      or featured_variant.compare_at_price > featured_variant.price
+                    -%}
+                      <span class="badge badge--sale font-body-bold uppercase">
+                        {%- liquid
+                          if featured_variant.metafields.data.reduction != blank
+                            assign reduction = featured_variant.metafields.data.reduction | prepend: '-' | append: '%'
+                          else
+                            assign reduction = featured_variant.compare_at_price | minus: featured_variant.price | times: 100.0 | divided_by: featured_variant.compare_at_price | round | prepend: '-' | append: '%'
+                          endif
+                          echo 'products.product.reduction' | t: reduction: reduction
+                        -%}
+                      </span>
+                    {%- endif -%}
+                  </span>
+                </label>
+              {%- endif -%}
+
+              {%- # Then render other values -%}
+              {%- for value in option.values -%}
+                {%- # Skip featured value if we have 3 variants since we already rendered it -%}
+                {%- if value_count == 3
+                  and featured_variant != blank
+                  and value == featured_variant.options[option_index]
+                -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                {%- liquid
+                  # Find the variant for this option value
+                  assign current_variant = null
+                  for variant in product.variants
+                    if variant.options[option_index] == value
+                      assign current_variant = variant
+                      break
+                    endif
+                  endfor
+
+                  assign option_disabled = true
+                  if value.available
+                    assign option_disabled = false
+                  endif
+
+                  # Check if this is the featured variant for 4-variant case
+                  assign is_featured_in_4 = false
+                  if value_count == 4 and featured_variant != blank and value == featured_variant.options[option_index]
+                    assign is_featured_in_4 = true
+                  endif
+                -%}
+
+                <label
+                  for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                  class="variant-grid__item{% if is_featured_in_4 %} variant-grid__item--featured-right{% endif %}{% if value == selected_value %} variant-grid__item--selected{% endif %}"
+                >
+                  <input
+                    type="radio"
+                    id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                    name="options[{{ option.name | escape }}]"
+                    value="{{ value | escape }}"
+                    form="{{ product_form_id }}"
+                    {% if value == selected_value %}
+                      checked
+                    {% endif %}
+                    {% if option_disabled %}
+                      class="disabled"
+                    {% endif %}
+                    data-option-value-id="{{ value.id }}"
+                  >
+                  <span class="variant-grid__content">
+                    <span class="variant-grid__title font-body-bold text-sm">{{ value }}</span>
+                    <span class="variant-grid__price font-body-bold">
+                      {%- if current_variant.compare_at_price > current_variant.price -%}
+                        <s>{{ current_variant.compare_at_price | money }}</s>
+                      {%- endif -%}
+                      <span>{{ current_variant.price | money }}</span>
+                    </span>
+                    {%- if current_variant.metafields.data.duration != blank
+                      or current_variant.metafields.data.volume != blank
+                    %}
+                      <span class="variant-grid__usage font-body-bold">
+                        <span>{{ 'products.product.usage' | t }}</span>
+                        <span>
+                          {%- liquid
+                            if current_variant.metafields.data.duration != blank
+                              echo current_variant.metafields.data.duration
+                            else
+                              assign volume = current_variant.metafields.data.volume.value.value | round
+                              assign translation = 'products.usage.' | append: volume | append: 'mL'
+                              echo translation | t
+                            endif
+                          -%}
+                        </span>
+                      </span>
+                    {% endif %}
+                    {%- if current_variant.metafields.data.reduction != blank
+                      or current_variant.compare_at_price > current_variant.price
+                    -%}
+                      <span class="badge badge--sale font-body-bold uppercase">
+                        {%- liquid
+                          if current_variant.metafields.data.reduction != blank
+                            assign reduction = current_variant.metafields.data.reduction | prepend: '-' | append: '%'
+                          else
+                            assign reduction = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round | prepend: '-' | append: '%'
+                          endif
+                          echo 'products.product.reduction' | t: reduction: reduction
+                        -%}
+                      </span>
+                    {%- endif -%}
+                    {%- if option_disabled -%}
+                      <span class="visually-hidden">
+                        {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                      </span>
+                    {%- endif -%}
+                  </span>
+                </label>
+              {%- endfor -%}
+            </div>
+          {% endif %}
+        </fieldset>
+
+      {%- else -%}
+        <div class="product-form__input product-form__input--dropdown">
+          {% if product.options_with_values.size > 1 %}
+            <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+              {{ option.name }}
+            </label>
+          {% endif %}
+          <div class="select">
+            {%- if picker_type == 'swatch_dropdown' -%}
+              <span
+                data-selected-value
+                class="dropdown-swatch"
+              >
+                {% render 'swatch', swatch: option.selected_value.swatch, shape: block.settings.swatch_shape %}
+              </span>
+            {%- endif -%}
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
+              {% render 'product-variant-options',
+                product: product,
+                option: option,
+                block: block,
+                picker_type: picker_type
+              %}
+            </select>
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <script type="application/json" data-selected-variant>
+      {{ checked_variant | json }}
+    </script>
+  </variant-selects>
+{%- endunless -%}

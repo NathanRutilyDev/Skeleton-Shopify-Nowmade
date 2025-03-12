@@ -1,0 +1,16 @@
+.breadcrumb {
+  a {
+    margin-right: 8px;
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+  }
+
+  .breadcrumb-divider {
+    margin-right: 8px;
+  }
+
+  .breadcrumb-item:last-child,
+  .breadcrumb-divider:last-child {
+    margin-right: 0;
+  }
+}

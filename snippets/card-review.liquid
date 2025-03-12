@@ -1,0 +1,13 @@
+<div class="card__featured-review center color-scheme-{{ color_scheme }}">
+  <div class="card__featured--review--stars">
+    {% for i in (1..5) %}
+      {{ 'icon-star-full.svg' | inline_asset_content }}
+    {% endfor %}
+  </div>
+  <h3 class="card__featured--review--heading h4">{{ heading }}</h3>
+  <div class="card__featured--review--review text-body">{{ review }}</div>
+  <div class="card__featured--review--footer">
+    <div class="card__featured--review--author--author text-body font-body-bold">{{ author }}</div>
+    <div class="card__featured--review--author--date text-xs">{{ date }}</div>
+  </div>
+</div>

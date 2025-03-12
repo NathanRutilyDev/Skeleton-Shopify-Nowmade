@@ -1,0 +1,131 @@
+{{ 'section-diagnostic-featured-articles.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="diagnostic-featured-articles color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding"
+>
+  <div class="diagnostic-featured-articles__container{% if section.settings.full_width != true %} page-width{% endif %}">
+    {% if section.settings.heading != blank %}
+      <h2 class="diagnostic-featured-articles__title">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if metaobject.section_conseils_de_nos_experts_liste_d_articles_de_blog.value != blank %}
+      <swiper-slider class="diagnostic-featured-articles__carousel swiper">
+        <script type="application/json">
+          {
+            "navigation": {
+              "nextEl": ".swiper-button-next",
+              "prevEl": ".swiper-button-prev"
+            },
+            "pagination": {
+              "el": ".swiper-pagination",
+              "clickable": true,
+              "type": "bullets"
+            },
+            "allowTouchMove": true,
+            "draggable": true,
+            "slidesPerView": 1,
+            "spaceBetween": 7,
+            "breakpoints": {
+              "768": {
+                "slidesPerView": "auto",
+                "spaceBetween": 16
+              }
+            }
+          }
+        </script>
+        <div class="swiper-wrapper">
+          {% for url in metaobject.section_conseils_de_nos_experts_liste_d_articles_de_blog.value %}
+            {% assign handle = url | split: '/' | last | strip | prepend: 'blog-oleassence/' %}
+            {% assign article = articles[handle] %}
+
+            {% if article != blank %}
+              <div class="diagnostic-featured-articles__slide swiper-slide article-card">
+                {% render 'card-article',
+                  card_article: article,
+                  show_badge: true,
+                  show_excerpt: true,
+                  show_tags: false,
+                  show_reading_time: false
+                %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="diagnostic-featured-articles__navigation">
+          <button class="swiper-button-prev">
+            {{ 'icon-chevron-left.svg' | inline_asset_content }}
+          </button>
+          <div class="swiper-pagination"></div>
+          <button class="swiper-button-next">
+            {{ 'icon-chevron-left.svg' | inline_asset_content }}
+          </button>
+        </div>
+      </swiper-slider>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Liste d'articles de blog",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre de la section",
+      "default": "Conseils de nos experts"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Schéma de couleurs"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Pleine largeur",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espace supérieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espace inférieur",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Liste d'articles de blog"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+{% if product.metafields.details.zone != blank %}
+  <div class="product-block-details">
+    {{ 'icon-target.svg' | inline_asset_content }}
+    <div class="product-block-details__list">
+      {% for zone in product.metafields.details.zone.value %}
+        {{- zone.nom -}}
+        {%- unless forloop.last %}, {% endunless -%}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.details.besoin != blank %}
+  <div class="product-block-details">
+    {{ 'icon-user.svg' | inline_asset_content }}
+    <div class="product-block-details__list">
+      {% for besoin in product.metafields.details.besoin.value %}
+        {{- besoin.nom -}}
+        {%- unless forloop.last %}, {% endunless -%}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.details.type != blank %}
+  <div class="product-block-details">
+    {{ 'icon-wind.svg' | inline_asset_content }}
+    <div class="product-block-details__list">
+      {% for type in product.metafields.details.type.value %}
+        {{- type.nom -}}
+        {%- unless forloop.last %}, {% endunless -%}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

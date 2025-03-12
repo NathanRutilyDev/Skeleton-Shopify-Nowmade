@@ -1,0 +1,1627 @@
+{{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-search-article-bar.css' | asset_url | stylesheet_tag }}
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<article class="article-template">
+  <!-- Hero Image -->
+  {% assign featured_image = article.image %}
+  {% if article.metafields.custom.hero_image != blank %}
+    {% assign featured_image = article.metafields.custom.hero_image %}
+  {% endif %}
+
+  {%- if featured_image -%}
+    <div
+      class="article-template__hero article-template__hero-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+      {% if settings.animations_reveal_on_scroll %}
+        data-cascade
+      {% endif %}
+    >
+      <div
+        class="article-template__hero-{{ section.settings.image_height }} media"
+        {% if section.settings.image_height == 'adapt' and featured_image %}
+          style="padding-bottom: {{ 1 | divided_by: featured_image.aspect_ratio | times: 100 }}%;"
+        {% endif %}
+      >
+        {%- capture sizes -%}
+          (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px, (min-width: 750px) calc(100vw - 10rem), 100vw
+        {%- endcapture -%}
+        {%- render 'responsive-image',
+          image: featured_image,
+          loading: 'eager',
+          sizes: '100vw',
+          allow_stretch: true,
+          sizes: sizes,
+          preload: true
+        -%}
+        {% comment %}
+          <img
+            srcset="
+              {% if featured_image.width >= 350 %}{{ featured_image | image_url: width: 350 }} 350w,{% endif %}
+              {% if featured_image.width >= 750 %}{{ featured_image | image_url: width: 750 }} 750w,{% endif %}
+              {% if featured_image.width >= 1100 %}{{ featured_image | image_url: width: 1100 }} 1100w,{% endif %}
+              {% if featured_image.width >= 1500 %}{{ featured_image | image_url: width: 1500 }} 1500w,{% endif %}
+              {% if featured_image.width >= 2200 %}{{ featured_image | image_url: width: 2200 }} 2200w,{% endif %}
+              {% if featured_image.width >= 3000 %}{{ featured_image | image_url: width: 3000 }} 3000w,{% endif %}
+              {{ featured_image | image_url }} {{ featured_image.width }}w
+            "
+            sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px, (min-width: 750px) calc(100vw - 10rem), 100vw"
+            src="{{ featured_image | image_url: width: 1100 }}"
+            loading="eager"
+            fetchpriority="high"
+            width="{{ featured_image.width }}"
+            height="{{ featured_image.height }}"
+            alt="{{ featured_image.alt | escape }}"
+          >
+        {% endcomment %}
+      </div>
+      {%- if section.settings.show_breadcrumbs -%}
+        <div class="article-template__breadcrumbs page-width">
+          {% render 'breadcrumb' %}
+        </div>
+      {% endif %}
+    </div>
+  {%- endif -%}
+
+  <div class="article-template__container page-width">
+    <!-- Related articles -->
+    <sticky-element class="article-template__related-articles">
+      <div class="h3">{{ 'blogs.article.related_articles' | t }}</div>
+
+      {%- if section.settings.show_search %}
+        {%- render 'search-article-bar' -%}
+      {%- endif -%}
+
+      {% if article.metafields.custom.related_articles.value.size > 0 %}
+        <swiper-slider class="swiper article-template__related-articles--swiper" data-disable-breakpoints="1200">
+          <script type="application/json">
+            {
+              "allowTouchMove": true,
+              "slidesPerView": 2,
+              "grabCursor": true,
+              "mousewheel": {
+                "forceToAxis": true,
+                "releaseOnEdges": true
+              },
+              "keyboard": {
+                "enabled": true
+              },
+              "pagination": {
+                "type": "bullets",
+                "el": ".swiper-pagination",
+                "clickable": true,
+                "dynamicMainBullets": 3
+              },
+              "spaceBetween": 16,
+              "breakpoints": {
+                "780": {
+                  "slidesPerView": 3
+                }
+              }
+            }
+          </script>
+          <div class="swiper-wrapper">
+            {%- for link in article.metafields.custom.related_articles.value -%}
+              {%- assign url_parts = link.url | split: '/' -%}
+              {%- assign article_handle = url_parts | last -%}
+              {%- for article in blogs['blog-oleassence'].articles -%}
+                {%- assign article_handle_clean = article.handle | split: '/' | last -%}
+                {%- if article_handle_clean == article_handle -%}
+                  <div class="swiper-slide article-card">
+                    {%- render 'card-article', card_article: article -%}
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+          <div class="swiper-pagination"></div>
+        </swiper-slider>
+        <a href="{{ blog.url }}" class="read-more uppercase">
+          {{ 'blogs.article.see_more_articles' | t }}
+          <div class="article-card__arrow-container">
+            {{- 'icon-arrow-compact.svg' | inline_asset_content -}}
+          </div>
+        </a>
+      {% endif %}
+    </sticky-element>
+
+    <!-- Main article -->
+    <div class="main-article">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            <div
+              class="main-article__app{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif %}
+            >
+              {% render block %}
+            </div>
+          {%- when 'featured_image' -%}
+            {%- if article.image -%}
+              <div
+                class="main-article__hero-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                {% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <div
+                  class="article__block-image article-template__hero-{{ block.settings.image_height }} media"
+                  {% if block.settings.image_height == 'adapt' and article.image %}
+                    style="padding-bottom: {{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%;"
+                  {% endif %}
+                >
+                  <img
+                    srcset="
+                      {% if article.image.width >= 350 %}{{ article.image | image_url: width: 350 }} 350w,{% endif %}
+                      {% if article.image.width >= 750 %}{{ article.image | image_url: width: 750 }} 750w,{% endif %}
+                      {% if article.image.width >= 1100 %}{{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+                      {% if article.image.width >= 1500 %}{{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+                      {% if article.image.width >= 2200 %}{{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+                      {% if article.image.width >= 3000 %}{{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
+                      {{ article.image | image_url }} {{ article.image.width }}w
+                    "
+                    sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px, (min-width: 750px) calc(100vw - 10rem), 100vw"
+                    src="{{ article.image | image_url: width: 1100 }}"
+                    loading="eager"
+                    fetchpriority="high"
+                    width="{{ article.image.width }}"
+                    height="{{ article.image.height }}"
+                    alt="{{ article.image.alt | escape }}"
+                  >
+                </div>
+              </div>
+            {%- endif -%}
+
+          {%- when 'title' -%}
+            <header
+              class="main-article__header {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.show_breadcrumbs -%}
+                {% render 'breadcrumb' %}
+              {% endif %}
+
+              <h1
+                class="article-template__title"
+              >
+                {% if article.metafields.custom.titre != blank %}
+                  {{ article.metafields.custom.titre }}
+                  {% if article.metafields.custom.sous_titre != blank %}
+                    <span class="h3">
+                      {{ article.metafields.custom.sous_titre }}
+                    </span>
+                  {% endif %}
+                {% else %}
+                  {{ article.title | escape }}
+                {% endif %}
+              </h1>
+              {%- if block.settings.blog_show_date -%}
+                <span class="circle-divider caption-with-letter-spacing">
+                  {{- article.published_at | time_tag: format: 'date' -}}
+                </span>
+              {%- endif -%}
+              {%- if block.settings.blog_show_author -%}
+                <span class="caption-with-letter-spacing">
+                  <span>{{ article.author }}</span>
+                </span>
+              {%- endif -%}
+            </header>
+
+          {%- when 'excerpt' -%}
+            <div
+              class="main-article__excerpt rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {{ article.excerpt }}
+            </div>
+
+          {%- when 'article-summary' -%}
+            <div
+              class="main-article__summary{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-summary',
+                title: block.settings.title,
+                summary__hn: block.settings.hn,
+                summary__hn_limit: block.settings.limit
+              %}
+            </div>
+
+          {% when 'reading-time' %}
+            <div
+              class="main-article__reading-time{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% assign content_words = article.content | split: ' ' %}
+              {% assign content_words_size = content_words.size %}
+              {% assign content_read_time = content_words_size | divided_by: 150 | round %}
+
+              <p class="main-article__reading-time--amount">
+                {% render 'icon-accordion', icon: 'time' %}
+                <span>
+                  {{ 'blogs.article.reading_time_long' | t: time: content_read_time }}
+                </span>
+              </p>
+              <p class="main-article__reading-time--date">
+                {% render 'icon-accordion', icon: 'calendar' %}
+                <span>
+                  {% assign date = article.published_at | date: '%d/%m/%Y' | upcase %}
+                  {{ 'blogs.article.updated_at' | t: date: date }}
+                </span>
+              </p>
+            </div>
+
+          {%- when 'chat' -%}
+            <div
+              class="main-article__chat-card{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'chat-card',
+                image: block.settings.image_chat,
+                heading: block.settings.chat_heading,
+                content: block.settings.chat_content,
+                first_badge_heading: block.settings.first_badge_heading,
+                first_badge_content: block.settings.first_badge_content,
+                second_badge_heading: block.settings.second_badge_heading,
+                second_badge_content: block.settings.second_badge_content
+              %}
+            </div>
+          {%- when 'tags' -%}
+            <div
+              class="main-article__tags{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              <div class="main-article__tags--wrapper">
+                {% for tag in article.metafields.data.tags.value %}
+                  {% assign tag_badge = tag %}
+                  <div
+                    class="main-article__tags--item"
+                    style="background-color:{{ tag_badge.background_color }}; color:{{ tag_badge.color }}"
+                  >
+                    <span>{{ tag_badge.name }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+          {%- when 'content' -%}
+            <div
+              class="article-template__content rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {{ article.content }}
+            </div>
+
+          {%- when 'share' -%}
+            <div
+              class="article-template__social-sharing page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% assign share_url = request.origin | append: article.url %}
+              {% render 'share-button', block: block, share_link: share_url %}
+            </div>
+          {%- when 'title-text' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-title-text', block: block %}
+            </div>
+          {%- when 'images-list' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-images-list', block: block %}
+            </div>
+          {%- when 'bullet-list' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-bullet-list', block: block %}
+            </div>
+          {%- when 'accordions' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-accordions', block: block %}
+            </div>
+          {%- when 'image-text' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-image-text', block: block %}
+            </div>
+          {%- when 'images' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-images', block: block %}
+            </div>
+          {%- when 'product-text' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-product-text', block: block %}
+            </div>
+          {%- when 'video' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-video', block: block %}
+            </div>
+          {%- when 'comparison' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-comparison', block: block %}
+            </div>
+          {%- when 'products-carousel' -%}
+            <div
+              class="article-content-block{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+              {% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {% render 'article-block-products-carousel', block: block %}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {%- if blog.comments_enabled? and section.settings.show_comments -%}
+        <div class="article-template__comment-wrapper background-secondary">
+          <div
+            id="comments"
+            class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+            {% endif -%}
+          >
+            {%- if article.comments_count > 0 -%}
+              {%- assign anchorId = '#Comments-' | append: article.id -%}
+
+              <h2 id="Comments-{{ article.id }}" tabindex="-1">
+                {{ 'blogs.article.comments' | t: count: article.comments_count }}
+              </h2>
+              {% paginate article.comments by 5 %}
+                <div class="article-template__comments">
+                  {%- if comment.status == 'pending' and comment.content -%}
+                    <article id="{{ comment.id }}" class="article-template__comments-comment">
+                      {{ comment.content }}
+                      <footer class="right">
+                        <span class="circle-divider caption-with-letter-spacing">{{ comment.author }}</span>
+                      </footer>
+                    </article>
+                  {%- endif -%}
+
+                  {%- for comment in article.comments -%}
+                    <article id="{{ comment.id }}" class="article-template__comments-comment">
+                      {{ comment.content }}
+                      <footer class="right">
+                        <span class="circle-divider caption-with-letter-spacing">{{ comment.author }}</span
+                        ><span class="caption-with-letter-spacing">
+                          {{- comment.created_at | time_tag: format: 'date' -}}
+                        </span>
+                      </footer>
+                    </article>
+                  {%- endfor -%}
+                  {% render 'pagination', paginate: paginate, anchor: anchorId %}
+                </div>
+              {% endpaginate %}
+            {%- endif -%}
+            {% form 'new_comment', article %}
+              {%- liquid
+                assign post_message = 'blogs.article.success'
+                if blog.moderated? and comment.status == 'unapproved'
+                  assign post_message = 'blogs.article.success_moderated'
+                endif
+              -%}
+              <h2>{{ 'blogs.article.comment_form_title' | t }}</h2>
+              {%- if form.errors -%}
+                <div class="form__message" role="alert">
+                  <h3 class="form-status caption-large text-body" tabindex="-1" autofocus>
+                    <span class="svg-wrapper">
+                      {{- 'icon-error.svg' | inline_asset_content -}}
+                    </span>
+                    {{ 'templates.contact.form.error_heading' | t }}
+                  </h3>
+                </div>
+                <ul class="form-status-list caption-large">
+                  {%- for field in form.errors -%}
+                    <li>
+                      <a href="#CommentForm-{{ field }}" class="link">
+                        {%- if form.errors.translated_fields[field] contains 'author' -%}
+                          {{ 'blogs.article.name' | t }}
+                        {%- elsif form.errors.translated_fields[field] contains 'body' -%}
+                          {{ 'blogs.article.message' | t }}
+                        {%- else -%}
+                          {{ form.errors.translated_fields[field] }}
+                        {%- endif -%}
+                        {{ form.errors.messages[field] }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- elsif form.posted_successfully? -%}
+                <div class="form-status-list form__message" role="status">
+                  <h3 class="form-status" tabindex="-1" autofocus>
+                    <span class="svg-wrapper">
+                      {{- 'icon-success.svg' | inline_asset_content -}}
+                    </span>
+                    {{ post_message | t }}
+                  </h3>
+                </div>
+              {%- endif -%}
+
+              <div
+                {% if blog.moderated? == false %}
+                  class="article-template__comments-fields"
+                {% endif %}
+              >
+                <div class="article-template__comment-fields">
+                  <div class="field field--with-error">
+                    <input
+                      type="text"
+                      name="comment[author]"
+                      id="CommentForm-author"
+                      class="field__input"
+                      autocomplete="name"
+                      value="{{ form.author }}"
+                      aria-required="true"
+                      required
+                      {% if form.errors contains 'author' %}
+                        aria-invalid="true"
+                        aria-describedby="CommentForm-author-error"
+                      {% endif %}
+                      placeholder="{{ 'blogs.article.name' | t }}"
+                    >
+                    <label class="field__label" for="CommentForm-author">
+                      {{- 'blogs.article.name' | t }}
+                      <span aria-hidden="true">*</span></label
+                    >
+                    {%- if form.errors contains 'author' -%}
+                      <small id="CommentForm-author-error">
+                        <span class="form__message">
+                          <span class="svg-wrapper">
+                            {{- 'icon-error.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'blogs.article.name' | t }}
+                          {{ form.errors.messages.author }}.</span
+                        >
+                      </small>
+                    {%- endif -%}
+                  </div>
+                  <div class="field field--with-error">
+                    <input
+                      type="email"
+                      name="comment[email]"
+                      id="CommentForm-email"
+                      autocomplete="email"
+                      class="field__input"
+                      value="{{ form.email }}"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      aria-required="true"
+                      required
+                      {% if form.errors contains 'email' %}
+                        aria-invalid="true"
+                        aria-describedby="CommentForm-email-error"
+                      {% endif %}
+                      placeholder="{{ 'blogs.article.email' | t }}"
+                    >
+                    <label class="field__label" for="CommentForm-email">
+                      {{- 'blogs.article.email' | t }}
+                      <span aria-hidden="true">*</span></label
+                    >
+                    {%- if form.errors contains 'email' -%}
+                      <small id="CommentForm-email-error">
+                        <span class="form__message">
+                          <span class="svg-wrapper">
+                            {{- 'icon-error.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'blogs.article.email' | t }}
+                          {{ form.errors.messages.email }}.</span
+                        >
+                      </small>
+                    {%- endif -%}
+                  </div>
+                </div>
+                <div class="field field--with-error">
+                  <textarea
+                    rows="5"
+                    name="comment[body]"
+                    id="CommentForm-body"
+                    class="text-area field__input"
+                    aria-required="true"
+                    required
+                    {% if form.errors contains 'body' %}
+                      aria-invalid="true"
+                      aria-describedby="CommentForm-body-error"
+                    {% endif %}
+                    placeholder="{{ 'blogs.article.message' | t }}"
+                  >{{ form.body }}</textarea>
+                  <label class="form__label field__label" for="CommentForm-body">
+                    {{- 'blogs.article.message' | t }}
+                    <span aria-hidden="true">*</span></label
+                  >
+                </div>
+                {%- if form.errors contains 'body' -%}
+                  <small id="CommentForm-body-error">
+                    <span class="form__message">
+                      <span class="svg-wrapper">
+                        {{- 'icon-error.svg' | inline_asset_content -}}
+                      </span>
+                      {{- 'blogs.article.message' | t }}
+                      {{ form.errors.messages.body }}.</span
+                    >
+                  </small>
+                {%- endif -%}
+              </div>
+              {%- if blog.moderated? -%}
+                <p class="article-template__comment-warning caption">{{ 'blogs.article.moderated' | t }}</p>
+              {%- endif -%}
+              <input type="submit" class="button" value="{{ 'blogs.article.post' | t }}">
+            {% endform %}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Related products -->
+    <sticky-element class="main-article__related-products medium-down-hide">
+      {% if article.metafields.data.related_products.value.count > 0 %}
+        {% for product in article.metafields.data.related_products.value %}
+          {% if product != blank %}
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: section.settings.image_ratio,
+              image_shape: section.settings.image_shape,
+              show_secondary_image: section.settings.show_secondary_image,
+              show_vendor: section.settings.show_vendor,
+              show_rating: section.settings.show_rating,
+              skip_styles: false,
+              section_id: section.id,
+              quick_add: section.settings.quick_add
+            %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <!-- card promo -->
+      {% assign card_promo = metaobjects.card_promo.values | where: 'enabled', true %}
+      {% if card_promo.size > 0 %}
+        <div class="article-card-promo">
+          {% render 'card-promo', metaobject: card_promo[0], color_scheme: section.settings.card_promo_color_scheme %}
+        </div>
+      {% endif %}
+    </sticky-element>
+  </div>
+
+  <!-- Related products sticky mobile -->
+  {% if article.metafields.data.related_products.value.count > 0 %}
+    <swiper-slider
+      class="swiper article-template__related-products-sticky color-scheme-1 medium-up-hide"
+      data-disable-breakpoints="980"
+    >
+      <script type="application/json">
+        {
+          "allowTouchMove": true,
+          "slidesPerView": 1,
+          "grabCursor": true,
+          "mousewheel": {
+            "forceToAxis": true,
+            "releaseOnEdges": true
+          },
+          "keyboard": {
+            "enabled": true
+          },
+          "pagination": {
+            "type": "bullets",
+            "el": ".swiper-pagination",
+            "clickable": true,
+            "dynamicMainBullets": 3,
+            "dynamicBullets": true
+          },
+          "spaceBetween": 16
+        }
+      </script>
+
+      <div class="article-template__related-products-sticky--header">
+        <div class="article-template__related-products-sticky--title h4">
+          {{ 'blogs.article.related_products_heading' | t }}
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      <div class="swiper-wrapper">
+        {% for product in article.metafields.data.related_products.value %}
+          <div class="swiper-slide">
+            {% render 'card-product-horizontal',
+              card_product: product,
+              media_aspect_ratio: 'square',
+              image_shape: false,
+              show_secondary_image: false,
+              show_vendor: false,
+              show_rating: true,
+              lazy_load: true,
+              skip_styles: false,
+              quick_add: 'standard',
+              section_id: section.id
+            %}
+          </div>
+        {%- endfor -%}
+      </div>
+    </swiper-slider>
+  {% endif %}
+</article>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-article.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_comments",
+      "label": "Afficher les commentaires",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__2.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__3.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__4.label"
+        }
+      ],
+      "default": "small",
+      "label": "t:sections.main-article.blocks.featured_image.settings.image_height.label",
+      "info": "t:sections.main-article.blocks.featured_image.settings.image_height.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "default": true,
+      "label": "Afficher le fil d'Ariane"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "default": true,
+      "label": "Montrer la recherche"
+    },
+    {
+      "type": "range",
+      "id": "tag_limit",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1,
+      "label": "Nombre de tags à afficher"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_time",
+      "default": true,
+      "label": "Afficher le temps de lecture"
+    },
+    {
+      "type": "header",
+      "content": "Produits associés"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "125%",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "100%",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.featured-collection.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.all.image_shape.options__1.label"
+        },
+        {
+          "value": "arch",
+          "label": "t:sections.all.image_shape.options__2.label"
+        },
+        {
+          "value": "blob",
+          "label": "t:sections.all.image_shape.options__3.label"
+        },
+        {
+          "value": "chevronleft",
+          "label": "t:sections.all.image_shape.options__4.label"
+        },
+        {
+          "value": "chevronright",
+          "label": "t:sections.all.image_shape.options__5.label"
+        },
+        {
+          "value": "diamond",
+          "label": "t:sections.all.image_shape.options__6.label"
+        },
+        {
+          "value": "parallelogram",
+          "label": "t:sections.all.image_shape.options__7.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.all.image_shape.options__8.label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.all.image_shape.label",
+      "info": "t:sections.all.image_shape.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "none",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "info": "t:sections.main-collection-product-grid.settings.quick_add.info",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+        },
+        {
+          "value": "bulk",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Carte promo"
+    },
+    {
+      "type": "paragraph",
+      "content": "La carte promo est relié à la 1ère entrée active trouvée sur le metaobject 'card_promo'."
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_promo_color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "featured_image",
+      "name": "t:sections.main-article.blocks.featured_image.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "image_height",
+          "options": [
+            {
+              "value": "adapt",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label"
+            },
+            {
+              "value": "small",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__2.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__3.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__4.label"
+            }
+          ],
+          "default": "adapt",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.label",
+          "info": "t:sections.main-article.blocks.featured_image.settings.image_height.info"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "t:sections.main-article.blocks.title.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_breadcrumbs",
+          "default": true,
+          "label": "Afficher le fil d'Ariane"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_date",
+          "default": false,
+          "label": "t:sections.main-article.blocks.title.settings.blog_show_date.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_author",
+          "default": false,
+          "label": "t:sections.main-article.blocks.title.settings.blog_show_author.label"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "t:sections.main-article.blocks.content.name",
+      "limit": 1
+    },
+    {
+      "type": "excerpt",
+      "name": "Excerpt",
+      "limit": 1
+    },
+    {
+      "type": "tags",
+      "name": "Tags",
+      "limit": 1
+    },
+    {
+      "type": "reading-time",
+      "name": "Reading time",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "read_text",
+          "label": "Texte de lecture",
+          "default": "TEMPS DE LECTURE:"
+        },
+        {
+          "type": "text",
+          "id": "publish_text",
+          "label": "Texte de publication",
+          "default": "MIS À JOUR LE"
+        }
+      ]
+    },
+    {
+      "type": "article-summary",
+      "name": "Sommaire automatique",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Sommaire de l'article"
+        },
+        {
+          "type": "select",
+          "id": "hn",
+          "options": [
+            {
+              "value": "h2",
+              "label": "h2"
+            },
+            {
+              "value": "h3",
+              "label": "h3"
+            },
+            {
+              "value": "h4",
+              "label": "h4"
+            }
+          ],
+          "default": "h4",
+          "label": "Niveau de l'intitulé"
+        },
+        {
+          "type": "range",
+          "id": "hn_limit",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "label": "Limites de l'intitulé"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "chat",
+      "name": "Chat",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Partie haute"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_chat",
+          "label": "Image de chat"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "chat_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "chat_content",
+          "label": "t:all.Description"
+        },
+        {
+          "type": "header",
+          "content": "Première vignette"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "first_badge_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "first_badge_content",
+          "label": "t:all.Description"
+        },
+        {
+          "type": "header",
+          "content": "Deuxième vignette"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "second_badge_heading",
+          "label": "t:all.Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "second_badge_content",
+          "label": "t:all.Description"
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "t:sections.main-article.blocks.share.name",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "share_label",
+          "label": "t:sections.main-article.blocks.share.settings.text.label",
+          "default": "t:sections.main-article.blocks.share.settings.text.default"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-article.blocks.share.settings.featured_image_info.content"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-article.blocks.share.settings.title_info.content"
+        }
+      ]
+    },
+    {
+      "type": "title-text",
+      "name": "Titre et texte",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        }
+      ]
+    },
+    {
+      "type": "images-list",
+      "name": "Liste d'images avec texte",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        }
+      ]
+    },
+    {
+      "type": "bullet-list",
+      "name": "Liste à puces",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_1",
+          "label": "Titre 1"
+        },
+        {
+          "type": "richtext",
+          "id": "text_1",
+          "label": "Texte 1"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_2",
+          "label": "Titre 2"
+        },
+        {
+          "type": "richtext",
+          "id": "text_2",
+          "label": "Texte 2"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_3",
+          "label": "Titre 3"
+        },
+        {
+          "type": "richtext",
+          "id": "text_3",
+          "label": "Texte 3"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_4",
+          "label": "Titre 4"
+        },
+        {
+          "type": "richtext",
+          "id": "text_4",
+          "label": "Texte 4"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_5",
+          "label": "Titre 5"
+        },
+        {
+          "type": "richtext",
+          "id": "text_5",
+          "label": "Texte 5"
+        }
+      ]
+    },
+    {
+      "type": "accordions",
+      "name": "Accordéons",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_1",
+          "label": "Titre 1"
+        },
+        {
+          "type": "richtext",
+          "id": "content_1",
+          "label": "Contenu 1"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_2",
+          "label": "Titre 2"
+        },
+        {
+          "type": "richtext",
+          "id": "content_2",
+          "label": "Contenu 2"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_3",
+          "label": "Titre 3"
+        },
+        {
+          "type": "richtext",
+          "id": "content_3",
+          "label": "Contenu 3"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_4",
+          "label": "Titre 4"
+        },
+        {
+          "type": "richtext",
+          "id": "content_4",
+          "label": "Contenu 4"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title_5",
+          "label": "Titre 5"
+        },
+        {
+          "type": "richtext",
+          "id": "content_5",
+          "label": "Contenu 5"
+        },
+        {
+          "type": "checkbox",
+          "id": "first_open",
+          "label": "Premier accordéon ouvert",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "accent_background",
+          "label": "Fond accentué",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "image-text",
+      "name": "Image avec texte",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_url",
+          "label": "Lien image"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "Format image",
+          "options": [
+            {
+              "value": "177",
+              "label": "Portrait"
+            },
+            {
+              "value": "100",
+              "label": "Carré"
+            },
+            {
+              "value": "56.25",
+              "label": "Paysage"
+            },
+            {
+              "value": "false",
+              "label": "Naturel"
+            }
+          ],
+          "default": "false"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "content_heading",
+          "label": "Titre du contenu"
+        },
+        {
+          "type": "richtext",
+          "id": "content_text",
+          "label": "Texte du contenu"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Vidéo",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "label": "URL de la vidéo",
+          "accept": ["youtube"]
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Fichier vidéo"
+        },
+        {
+          "type": "image_picker",
+          "id": "preview_image",
+          "label": "Image de prévisualisation"
+        }
+      ]
+    },
+    {
+      "type": "comparison",
+      "name": "Tableau comparatif",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "image_picker",
+          "id": "col_image_2",
+          "label": "Image colonne 2"
+        },
+        {
+          "type": "text",
+          "id": "col_heading_2",
+          "label": "Titre colonne 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "col_image_3",
+          "label": "Image colonne 3"
+        },
+        {
+          "type": "text",
+          "id": "col_heading_3",
+          "label": "Titre colonne 3"
+        },
+        {
+          "type": "textarea",
+          "id": "col_list_1",
+          "label": "Liste colonne 1"
+        },
+        {
+          "type": "textarea",
+          "id": "col_list_2",
+          "label": "Liste colonne 2"
+        },
+        {
+          "type": "textarea",
+          "id": "col_list_3",
+          "label": "Liste colonne 3"
+        }
+      ]
+    },
+    {
+      "type": "products-carousel",
+      "name": "Carousel de produits",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "header",
+          "content": "Contenu du bloc"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Produits",
+          "limit": 12
+        },
+        {
+          "type": "text",
+          "id": "content_heading",
+          "label": "Titre du carousel"
+        }
+      ]
+    },
+
+    {
+      "type": "images",
+      "name": "Images",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image 1"
+        },
+        {
+          "type": "url",
+          "id": "image_1_url",
+          "label": "Lien image 1"
+        },
+        {
+          "type": "select",
+          "id": "image_1_ratio",
+          "label": "Format image 1",
+          "options": [
+            {
+              "value": "177",
+              "label": "Portrait"
+            },
+            {
+              "value": "100",
+              "label": "Carré"
+            },
+            {
+              "value": "56.25",
+              "label": "Paysage"
+            },
+            {
+              "value": "false",
+              "label": "Naturel"
+            }
+          ],
+          "default": "false"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "url",
+          "id": "image_2_url",
+          "label": "Lien image 2"
+        },
+        {
+          "type": "select",
+          "id": "image_2_ratio",
+          "label": "Format image 2",
+          "options": [
+            {
+              "value": "177",
+              "label": "Portrait"
+            },
+            {
+              "value": "100",
+              "label": "Carré"
+            },
+            {
+              "value": "56.25",
+              "label": "Paysage"
+            },
+            {
+              "value": "false",
+              "label": "Naturel"
+            }
+          ],
+          "default": "false"
+        }
+      ]
+    },
+    {
+      "type": "product-text",
+      "name": "Produit avec texte",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Titre principal"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte principal"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "content_heading",
+          "label": "Titre du contenu"
+        },
+        {
+          "type": "richtext",
+          "id": "content_text",
+          "label": "Texte du contenu"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

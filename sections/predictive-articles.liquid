@@ -1,0 +1,49 @@
+{%- if predictive_search.performed -%}
+  {%- for article in predictive_search.resources.articles -%}
+    {%- liquid
+      assign content_words = article.content | split: ' '
+      assign content_words_size = content_words.size
+      assign content_read_time = content_words_size | divided_by: 150 | round
+      assign tags = article.metafields.data.tags.value
+    -%}
+
+    <a href="{{ article.url }}" class="search-article__result left">
+      {{
+        article.image
+        | image_url: width: 56
+        | image_tag: alt: article.title, width: article.image.width, height: article.image.height, loading: 'lazy'
+      }}
+      <div class="search-article__result--content">
+        <div class="search-article__result--texts">
+          <div class="search-article__result--tags-list">
+            {% for tag in tags limit: 3 %}
+              <span
+                class="search-article__result--tag{%- unless forloop.first %} medium-down-hide{% endunless %}"
+                style="color: {{ tag.color }}; background: {{ tag.background_color }};"
+              >
+                {{ tag.name }}
+              </span>
+            {% endfor %}
+            {% if tags.count > 3 %}
+              <span
+                class="search-article__result--tags-more"
+              >
+                <span class="medium-down-hide">{{ tags.count | minus: 3 }}</span>
+                <span class="medium-up-hide">{{ tags.count | minus: 1 }}</span>
+                {{ 'icon-plus.svg' | inline_asset_content }}
+              </span>
+            {% endif %}
+          </div>
+          <p class="search-article__result--tags-time">{{ content_read_time }} min</p>
+        </div>
+        <p>{{ article.title }}</p>
+      </div>
+    </a>
+  {%- else -%}
+    <div class="search-result">
+      <div class="search-result__text">
+        <p>{{ 'general.search.no_articles' | t }}</p>
+      </div>
+    </div>
+  {%- endfor %}
+{%- endif %}

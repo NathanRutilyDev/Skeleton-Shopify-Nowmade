@@ -1,0 +1,173 @@
+{{ 'section-featured-reviews.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% if section.settings.featured_reviews != blank %}
+  <div class="featured-reviews isolate{% unless section.settings.full_width %} page-width{% endunless %} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
+    <div class="featured-reviews__wrapper">
+      <div class="featured-reviews__content">
+        <swiper-slider class="featured-reviews__slider swiper">
+          <script type="application/json">
+            {
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true,
+                "type": "bullets"
+              },
+              "allowTouchMove": true,
+              "draggable": true,
+              "slidesPerView": 1,
+              "loop": true,
+              "effect": "slide",
+              "autoHeight": true,
+              "thumbs": {
+                "el": "#FeaturedReviewsMedia-{{ section.id }}",
+                "config": {
+                  "slidesPerView": 1,
+                  "effect": "fade",
+                  "watchSlidesProgress": true,
+                  "fadeEffect": {
+                    "crossFade": true
+                  }
+                }
+              }
+            }
+          </script>
+          <div class="swiper-wrapper">
+            {% for review in section.settings.featured_reviews %}
+              <div class="swiper-slide">
+                <div class="featured-reviews__review">
+                  <div class="featured-reviews__stars">
+                    {{ 'icon-star-full.svg' | inline_asset_content }}
+                    {{ 'icon-star-full.svg' | inline_asset_content }}
+                    {{ 'icon-star-full.svg' | inline_asset_content }}
+                    {{ 'icon-star-full.svg' | inline_asset_content }}
+                    {{ 'icon-star-full.svg' | inline_asset_content }}
+                  </div>
+                  <h3 class="featured-reviews__heading h4">{{ review.heading }}</h3>
+                  <div class="featured-reviews__text">{{ review.content | metafield_tag }}</div>
+                  <div class="featured-reviews__author">
+                    <span class="featured-reviews__name font-body-bold">{{ review['auteur-name'] }}</span>
+                    <span class="featured-reviews__location text-xs">
+                      {{- review.country }}, {{ review['created-date'] | date: '%d %B %Y' -}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="swiper-actions">
+            <div class="swiper-pagination"></div>
+            <div class="swiper-arrows-fraction">
+              <div class="swiper-button-prev">
+                {{ 'icon-chevron-left.svg' | inline_asset_content }}
+              </div>
+              <div class="swiper-pagination-fraction"></div>
+              <div class="swiper-button-next">
+                {{ 'icon-chevron-left.svg' | inline_asset_content }}
+              </div>
+            </div>
+          </div>
+        </swiper-slider>
+      </div>
+
+      <div class="featured-reviews__media">
+        <div id="FeaturedReviewsMedia-{{ section.id }}" class="featured-reviews__images swiper">
+          <div class="swiper-wrapper">
+            {% for review in section.settings.featured_reviews %}
+              <div class="swiper-slide">
+                {% if review.image %}
+                  {{
+                    review.image
+                    | image_url: width: 800
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'featured-reviews__image',
+                      sizes: '(min-width: 1200px) 50vw, 100vw'
+                  }}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Avis en vedette",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "metaobject_list",
+      "id": "featured_reviews",
+      "label": "Featured Reviews",
+      "metaobject_type": "featured-reviews"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "Full width"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 52
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis en vedette"
+    }
+  ]
+}
+{% endschema %}

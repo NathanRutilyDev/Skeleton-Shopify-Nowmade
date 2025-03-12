@@ -1,0 +1,17 @@
+<svg
+  class="icon icon-target"
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 14 14"
+  fill="none"
+>
+  <g clip-path="url(#clip0_4403_640)">
+    <path d="M12.8334 7.00002C12.8334 3.77827 10.2218 1.16669 7.00008 1.16669M12.8334 7.00002C12.8334 10.2218 10.2218 12.8334 7.00008 12.8334M12.8334 7.00002H10.5001M7.00008 1.16669C3.77833 1.16669 1.16675 3.77827 1.16675 7.00002M7.00008 1.16669V3.50002M1.16675 7.00002C1.16675 10.2218 3.77833 12.8334 7.00008 12.8334M1.16675 7.00002H3.50008M7.00008 12.8334V10.5M6.99775 7.00002H7.003" stroke="#443D36" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_4403_640">
+      <rect width="14" height="14" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>

@@ -1,0 +1,111 @@
+.icon-text-grid {
+  margin: 0 auto;
+  background: rgb(var(--color-background));
+}
+.icon-text-grid__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: rgb(var(--color-background));
+}
+.icon-text-grid__content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+}
+.icon-text-grid__content.left {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  text-align: left;
+}
+.icon-text-grid__content.center {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+}
+.icon-text-grid__content.right {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  text-align: right;
+}
+.icon-text-grid__items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 100%;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .icon-text-grid__items {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3rem;
+  }
+}
+.icon-text-grid__item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1.6rem;
+  text-align: left;
+  /* Handle min-width only */
+}
+@media (min-width: 768px) {
+  .icon-text-grid__item {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    text-align: center;
+  }
+}
+.icon-text-grid__icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: rgb(var(--color-background-contrast));
+}
+@media screen and (min-width: 750px) {
+  .icon-text-grid__icon {
+    width: 64px;
+    height: 64px;
+  }
+}
+.icon-text-grid__icon img {
+  width: 40px;
+  height: 40px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  border-radius: 50%;
+}
+.icon-text-grid__text {
+  margin: 0;
+}
