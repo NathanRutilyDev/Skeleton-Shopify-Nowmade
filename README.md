@@ -1,99 +1,132 @@
-# Dawn
+# Shopify Theme Nowmade Development Guide
 
-[![Build status](https://github.com/shopify/dawn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/dawn/actions/workflows/ci.yml?query=branch%3Amain)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?color=informational)](/.github/CONTRIBUTING.md)
-
-[Getting started](#getting-started) |
-[Staying up to date with Dawn changes](#staying-up-to-date-with-dawn-changes) |
-[Developer tools](#developer-tools) |
+[Getting Started](#getting-started) |
+[Development Workflow](#development-workflow) |
+[SCSS and BEM Methodology](#scss-and-bem-methodology) |
+[Responsive Images](#responsive-images) |
+[Responsive Design](#responsive-design) |
+[JavaScript Practices](#javascript-practices) |
+[Version Control](#version-control) |
 [Contributing](#contributing) |
-[Code of conduct](#code-of-conduct) |
-[Theme Store submission](#theme-store-submission) |
 [License](#license)
 
-Dawn represents a HTML-first, JavaScript-only-as-needed approach to theme development. It's Shopify's first source available theme with performance, flexibility, and [Online Store 2.0 features](https://www.shopify.com/partners/blog/shopify-online-store) built-in and acts as a reference for building Shopify themes.
+This guide outlines the best practices and workflows for developing Shopify themes, ensuring performance, flexibility, and adherence to Shopify's Online Store 2.0 features.
 
-* **Web-native in its purest form:** Themes run on the [evergreen web](https://www.w3.org/2001/tag/doc/evergreen-web/). We leverage the latest web browsers to their fullest, while maintaining support for the older ones through progressive enhancement—not polyfills.
-* **Lean, fast, and reliable:** Functionality and design defaults to “no” until it meets this requirement. Code ships on quality. Themes must be built with purpose. They shouldn’t support each and every feature in Shopify.
-* **Server-rendered:** HTML must be rendered by Shopify servers using Liquid. Business logic and platform primitives such as translations and money formatting don’t belong on the client. Async and on-demand rendering of parts of the page is OK, but we do it sparingly as a progressive enhancement.
-* **Functional, not pixel-perfect:** The Web doesn’t require each page to be rendered pixel-perfect by each browser engine. Using semantic markup, progressive enhancement, and clever design, we ensure that themes remain functional regardless of the browser.
+## Getting Started
 
-You can find a more detailed version of our theme code principles in the [contribution guide](https://github.com/Shopify/dawn/blob/main/.github/CONTRIBUTING.md#theme-code-principles).
+To begin developing Shopify themes efficiently, follow these initial steps:
 
-## Getting started
-We recommend using Dawn as a starting point for theme development. [Learn more on Shopify.dev](https://shopify.dev/themes/getting-started/create).
+1. **Install Shopify CLI**: Utilize the [Shopify CLI](https://shopify.dev/docs/themes/tools/cli) to streamline your development process, allowing for local theme development and management.
 
-> If you're building a theme for the Shopify Theme Store, then you can use Dawn as a starting point. However, the theme that you submit needs to be [substantively different from Dawn](https://shopify.dev/themes/store/requirements#uniqueness) so that it provides added value for merchants. Learn about the [ways that you can use Dawn](https://shopify.dev/themes/tools/dawn#ways-to-use-dawn).
+2. **Set Up Development Environment**:
+   - **Clone the Repository**: Clone your theme repository to your local machine.
+   - **Install Dependencies**: Navigate to your theme directory and install necessary dependencies using `npm install`.
 
-Please note that the main branch may include code for features not yet released. The "stable" version of Dawn is available in the theme store.
+3. **Configure Store Settings**:
+   - **`config.yml`**: Set your store handle (e.g., `https://admin.shopify.com/stores/your-store-handle`) and your `dev_theme_id` obtained from running `shopify theme dev` initially. This configuration facilitates the use of `.vscode/tasks.json` for theme management.
 
-## Staying up to date with Dawn changes
+## Development Workflow
 
-Say you're building a new theme off Dawn but you still want to be able to pull in the latest changes, you can add a remote `upstream` pointing to this Dawn repository.
+Adhering to a structured workflow enhances productivity and code quality:
 
-1. Navigate to your local theme folder.
-2. Verify the list of remotes and validate that you have both an `origin` and `upstream`:
-```sh
-git remote -v
-```
-3. If you don't see an `upstream`, you can add one that points to Shopify's Dawn repository:
-```sh
-git remote add upstream https://github.com/Shopify/dawn.git
-```
-4. Pull in the latest Dawn changes into your repository:
-```sh
-git fetch upstream
-git pull upstream main
-```
+- **Development Mode**: Always work in development mode using Shopify CLI to preview changes locally before pushing them to the live store.
 
-## Developer tools
+- **Version Control**: Commit your code changes with descriptive messages at the end of each session, and push to a dedicated Git branch. This practice maintains a clean commit history and facilitates code reviews.
 
-There are a number of really useful tools that the Shopify Themes team uses during development. Dawn is already set up to work with these tools.
+- **SCSS Compilation**: Use Gulp to automatically compile SCSS files into `/assets/*.css`. After installing `node_modules` from `package.json`, simply run the `gulp` command in your terminal to start the compilation process.
 
-### Shopify CLI
+- **VSCode Extensions**: Ensure all required VSCode extensions are listed in `.vscode/extensions.json`. You can install them collectively to maintain a consistent development environment.
 
-[Shopify CLI](https://github.com/Shopify/shopify-cli) helps you build Shopify themes faster and is used to automate and enhance your local development workflow. It comes bundled with a suite of commands for developing Shopify themes—everything from working with themes on a Shopify store (e.g. creating, publishing, deleting themes) or launching a development server for local theme development.
+## SCSS and BEM Methodology
 
-You can follow this [quick start guide for theme developers](https://shopify.dev/docs/themes/tools/cli) to get started.
+Maintain organized and scalable stylesheets by following these guidelines:
 
-### Theme Check
+- **BEM Convention**: Adopt the Block-Element-Modifier (BEM) naming convention for CSS classes to enhance readability and maintainability.
 
-We recommend using [Theme Check](https://github.com/shopify/theme-check) as a way to validate and lint your Shopify themes.
+- **SCSS Structure**: Structure your SCSS files modularly, with separate files for each component or section.
 
-We've added Theme Check to Dawn's [list of VS Code extensions](/.vscode/extensions.json) so if you're using Visual Studio Code as your code editor of choice, you'll be prompted to install the [Theme Check VS Code](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension upon opening VS Code after you've forked and cloned Dawn.
+- **Responsive Mixins**: Utilize the `respond-to` mixin from `/scss/mixins.scss` to handle media queries and ensure a responsive design.
 
-You can also run it from a terminal with the following Shopify CLI command:
+## Responsive Images
 
-```bash
-shopify theme check
-```
+Optimize image handling for various devices:
 
-### Continuous Integration
+- **Responsive Image Snippet**: Use the `/snippets/responsive-image.liquid` snippet to serve appropriately sized images based on the user's device, improving load times and performance.
 
-Dawn uses [GitHub Actions](https://github.com/features/actions) to maintain the quality of the theme. [This is a starting point](https://github.com/Shopify/dawn/blob/main/.github/workflows/ci.yml) and what we suggest to use in order to ensure you're building better themes. Feel free to build off of it!
+## Responsive Design
 
-#### Shopify/lighthouse-ci-action
+Ensure your theme is accessible and visually appealing across all devices:
 
-We love fast websites! Which is why we created [Shopify/lighthouse-ci-action](https://github.com/Shopify/lighthouse-ci-action). This runs a series of [Google Lighthouse](https://developers.google.com/web/tools/lighthouse) audits for the home, product and collections pages on a store to ensure code that gets added doesn't degrade storefront performance over time.
+- **Mobile-First Approach**: Design your styles with a mobile-first mindset, using media queries to adjust layouts for larger screens.
 
-#### Shopify/theme-check-action
+- **Media Queries**: Implement responsive design using the following SCSS mixin:
 
-Dawn runs [Theme Check](#Theme-Check) on every commit via [Shopify/theme-check-action](https://github.com/Shopify/theme-check-action).
+  ```scss
+  /* Define the breakpoints */
+  $breakpoints: (
+    sm: 500px,
+    md: 768px,
+    ml: 980px,
+    l: 1080px,
+    xl: 1200px,
+    xxl: 1440px,
+    wide: 1600px,
+  );
+
+  // Mixin for media queries
+  @mixin respond-to($breakpoint, $max-breakpoint: null) {
+    $min-value: map-get($breakpoints, $breakpoint);
+    $max-value: if($max-breakpoint, map-get($breakpoints, $max-breakpoint), null);
+
+    // Handle min-width only
+    @if $min-value and $max-value == null {
+      @media (min-width: #{$min-value}) {
+        @content;
+      }
+    }
+
+    // Handle min-width and max-width (range)
+    @else if $min-value and $max-value {
+      @media (min-width: #{$min-value}) and (max-width: #{$max-value - 1}) {
+        @content;
+      }
+    }
+
+    // Handle max-width
+    @else if $min-value == null and $max-value {
+      @media (max-width: #{$max-value - 1}) {
+        @content;
+      }
+    }
+    // Throw error if breakpoint is invalid
+    @else {
+      @error "Breakpoint '#{$breakpoint}' or '#{$max-breakpoint}' is not defined in $breakpoints.";
+    }
+  }
+  ```
+
+## JavaScript Practices
+
+Enhance functionality while maintaining performance:
+
+- **Custom Elements**: Utilize JavaScript Custom Elements with the `connectedCallback` method for encapsulated and reusable components.
+
+- **Swiper Integration**: For implementing sliders, reference the `/assets/swiper.js` file. Avoid inline JavaScript code; instead, maintain clean and modular scripts.
+
+## Version Control
+
+Maintain code integrity and collaboration:
+
+- **Git Workflow**: Use Git for version control, committing changes with clear messages, and pushing to dedicated branches. This practice facilitates code reviews and collaboration.
 
 ## Contributing
 
-Want to make commerce better for everyone by contributing to Dawn? We'd love your help! Please read our [contributing guide](https://github.com/Shopify/dawn/blob/main/.github/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build for Dawn.
-
-## Code of conduct
-
-All developers who wish to contribute through code or issues, please first read our [Code of Conduct](https://github.com/Shopify/dawn/blob/main/.github/CODE_OF_CONDUCT.md).
-
-## Theme Store submission
-
-The [Shopify Theme Store](https://themes.shopify.com/) is the place where Shopify merchants find the themes that they'll use to showcase and support their business. As a theme partner, you can create themes for the Shopify Theme Store and reach an international audience of an ever-growing number of entrepreneurs.
-
-Ensure that you follow the list of [theme store requirements](https://shopify.dev/themes/store/requirements) if you're interested in becoming a [Shopify Theme Partner](https://themes.shopify.com/services/themes/guidelines) and building themes for the Shopify platform.
+We welcome contributions to improve this project. Please read our [contributing guide](/.github/CONTRIBUTING.md) to understand our development process, how to propose bug fixes and improvements, and how to build and test your changes effectively.
 
 ## License
 
-Copyright (c) 2021-present Shopify Inc. See [LICENSE](/LICENSE.md) for further details.
+This project is licensed under the MIT License. See the [LICENSE](/LICENSE.md) file for more details.
+
+---
+
+By following this guide, you ensure that your Shopify theme development process is efficient, maintainable, and aligned with industry best practices. 
